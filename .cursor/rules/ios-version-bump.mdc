@@ -1,0 +1,32 @@
+---
+description: Incrementează versiunea app iOS la schimbări vizibile în aplicația nativă
+alwaysApply: true
+---
+
+# Versionare app iOS (Facturare by DateConta)
+
+**Sursă:** `ios/Facturare by DateConta/Facturare by DateConta.xcodeproj/project.pbxproj`
+
+- `MARKETING_VERSION` = versiunea afișată (ex. `1.0.028`) — format `MAJOR.MINOR.PATCH` cu PATCH pe 3 cifre
+- `CURRENT_PROJECT_VERSION` = build integer (ex. `28`) — crește cu 1 la fiecare bump
+
+Afișare: meniul lateral / Mai mult (`AppVersion.ios` + versiunea web din API).
+
+## Obligatoriu la îmbunătățiri iOS vizibile
+
+După orice feature / fix UX / schimbare de flux în app-ul iOS (nu doar explorare):
+
+1. Incrementează **ambele** în `project.pbxproj` (Debug + Release):
+   - `CURRENT_PROJECT_VERSION` += 1
+   - `MARKETING_VERSION` PATCH += 1 (ex. `1.0.028` → `1.0.029`), aliniat cu noul build când e posibil
+2. Menționează noua versiune iOS în răspuns (ex. iOS 1.0.029 build 29).
+
+## Nu bump
+
+- Doar explorare / planificare / întrebări
+- Doar schimbări backend/web fără touch pe iOS
+- Fix-uri triviale de o linie fără impact utilizator (la discreție; preferă bump dacă e în app)
+
+## Nu confunda cu web
+
+Versiunea web rămâne în `config/changelog.php` (regula `version-bump`). iOS și web se incrementează separat.

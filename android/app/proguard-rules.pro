@@ -1,0 +1,4 @@
+-keepattributes *Annotation*
+-keepclassmembers class kotlinx.serialization.json.** { *; }
+-keep,includedescriptorclasses class ro.dateconta.facturare.core.api.**$$serializer { *; }
+-keep class ro.dateconta.facturare.core.api.** { *; }

@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('document_items', function (Blueprint $table) {
+            if (! Schema::hasColumn('document_items', 'description')) {
+                $table->text('description')->nullable()->after('name');
+            }
+            if (! Schema::hasColumn('document_items', 'details')) {
+                $table->json('details')->nullable()->after('line_total');
+            }
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('document_items', function (Blueprint $table) {
+            if (Schema::hasColumn('document_items', 'details')) {
+                $table->dropColumn('details');
+            }
+            if (Schema::hasColumn('document_items', 'description')) {
+                $table->dropColumn('description');
+            }
+        });
+    }
+};

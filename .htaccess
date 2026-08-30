@@ -1,0 +1,19 @@
+# Dacă document root-ul vhost-ului e rădăcina proiectului (nu /public),
+# tot traficul e redirecționat în public/ și fișierele sensibile sunt blocate.
+
+Options -Indexes -MultiViews
+ServerSignature Off
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Blochează fișiere/directoare din afara public/
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule ^(app|bootstrap|config|database|lang|resources|routes|storage|tests|vendor|node_modules)/ - [F,L]
+    RewriteRule ^(artisan|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|vite\.config\.js|tailwind\.config\.js|postcss\.config\.js)$ - [F,L]
+    RewriteRule \.(env|log|sql|zip|tar|gz|bak|old|md)$ - [F,L]
+
+    # Tot ce nu e deja în /public trece prin public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

@@ -1,0 +1,6 @@
+*
+!public/
+!.gitignore
+
+/netopia/private.key
+/netopia/public.cer

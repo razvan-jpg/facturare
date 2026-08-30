@@ -1,0 +1,173 @@
+{
+  "identifier" : "FacturareProducts",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21480001",
+      "localizations" : [
+        {
+          "description" : "Acces continuu la aplicația Facturare pe iPhone și iPad.",
+          "displayName" : "Facturare Premium",
+          "locale" : "ro_RO"
+        },
+        {
+          "description" : "Continued access to the Facturare app on iPhone and iPad.",
+          "displayName" : "Facturare Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "Facturare Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 4,
+          "internalID" : "21480002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Abonament lunar pentru aplicația Facturare (după 31.03.2027).",
+              "displayName" : "Facturare — 1 lună",
+              "locale" : "ro_RO"
+            },
+            {
+              "description" : "Monthly subscription for the Facturare iOS app (after March 31, 2027).",
+              "displayName" : "Facturare — Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ro.dateconta.facturare.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Facturare Monthly",
+          "subscriptionGroupID" : "21480001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "21480003",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Abonament pe 3 luni pentru aplicația Facturare (după 31.03.2027).",
+              "displayName" : "Facturare — 3 luni",
+              "locale" : "ro_RO"
+            },
+            {
+              "description" : "3-month subscription for the Facturare iOS app (after March 31, 2027).",
+              "displayName" : "Facturare — 3 Months",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ro.dateconta.facturare.premium.3months",
+          "recurringSubscriptionPeriod" : "P3M",
+          "referenceName" : "Facturare 3 Months",
+          "subscriptionGroupID" : "21480001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "5.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "21480004",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Abonament pe 6 luni pentru aplicația Facturare (după 31.03.2027).",
+              "displayName" : "Facturare — 6 luni",
+              "locale" : "ro_RO"
+            },
+            {
+              "description" : "6-month subscription for the Facturare iOS app (after March 31, 2027).",
+              "displayName" : "Facturare — 6 Months",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ro.dateconta.facturare.premium.6months",
+          "recurringSubscriptionPeriod" : "P6M",
+          "referenceName" : "Facturare 6 Months",
+          "subscriptionGroupID" : "21480001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "21480005",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Abonament anual pentru aplicația Facturare (după 31.03.2027).",
+              "displayName" : "Facturare — 1 an",
+              "locale" : "ro_RO"
+            },
+            {
+              "description" : "Yearly subscription for the Facturare iOS app (after March 31, 2027).",
+              "displayName" : "Facturare — Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ro.dateconta.facturare.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Facturare Yearly",
+          "subscriptionGroupID" : "21480001",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

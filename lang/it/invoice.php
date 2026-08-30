@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Fattura',
+    'type_proforma' => 'Fattura proforma',
+    'type_delivery' => 'Bolla di consegna',
+    'type_receipt' => 'Ricevuta',
+    'type_credit_note' => 'Nota di credito',
+    'draft' => 'Bozza',
+    'date' => 'Data',
+    'due_date' => 'Scadenza',
+    'supplier' => 'Fornitore',
+    'client' => 'Cliente',
+    'cui' => 'P. IVA',
+    'iban' => 'IBAN',
+    'name' => 'Descrizione',
+    'unit' => 'UdM',
+    'qty' => 'Qtà',
+    'price' => 'Prezzo',
+    'vat' => 'IVA',
+    'total' => 'Totale',
+    'subtotal' => 'Imponibile',
+    'signature' => 'Firma',
+    'stamp' => 'Timbro',
+    'exchange_rate' => 'Cambio',
+    'ron_equivalent' => 'Equivalente',
+    'generated' => 'Documento generato con DateConta Facturare',
+];

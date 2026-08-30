@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Invoice',
+    'type_proforma' => 'Proforma invoice',
+    'type_delivery' => 'Delivery note',
+    'type_receipt' => 'Receipt',
+    'type_credit_note' => 'Credit note',
+    'draft' => 'Draft',
+    'date' => 'Date',
+    'due_date' => 'Due date',
+    'supplier' => 'Supplier',
+    'client' => 'Customer',
+    'cui' => 'Tax ID',
+    'iban' => 'IBAN',
+    'name' => 'Description',
+    'unit' => 'Unit',
+    'qty' => 'Qty',
+    'price' => 'Price',
+    'vat' => 'VAT',
+    'total' => 'Total',
+    'subtotal' => 'Subtotal',
+    'signature' => 'Signature',
+    'stamp' => 'Stamp',
+    'exchange_rate' => 'Exchange rate',
+    'ron_equivalent' => 'Equivalent',
+    'generated' => 'Document generated with DateConta Facturare',
+];

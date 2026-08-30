@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Previzualizare machetă DateConta B</title>
+<style>
+  :root {
+    --teal: #0f4c5c;
+    --amber: #e08a1e;
+    --ink: #102a43;
+    --muted: #627d98;
+    --bg: #e8eef2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 0%, rgba(224,138,30,.18), transparent 55%),
+      radial-gradient(ellipse 70% 45% at 90% 10%, rgba(15,76,92,.16), transparent 50%),
+      var(--bg);
+    color: var(--ink);
+    padding: 32px 16px 48px;
+  }
+  .page { max-width: 860px; margin: 0 auto; }
+  .intro { margin-bottom: 20px; }
+  .intro h1 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 1.75rem;
+    margin: 0 0 8px;
+    color: var(--teal);
+  }
+  .intro p { margin: 0; color: var(--muted); line-height: 1.5; max-width: 56ch; }
+  .badge {
+    display: inline-block;
+    margin-top: 12px;
+    background: #fff4e0;
+    color: #8a4b00;
+    border: 1px solid #f0c989;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 999px;
+  }
+  .sheet {
+    background: #fff;
+    box-shadow: 0 18px 50px rgba(16,42,67,.14);
+    border-radius: 4px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 28% 1fr;
+    min-height: 640px;
+  }
+  .rail {
+    background: var(--teal);
+    color: #fff;
+    padding: 24px 16px;
+  }
+  .pill {
+    display: inline-block;
+    background: var(--amber);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-bottom: 16px;
+  }
+  .rail h2 { margin: 0 0 6px; font-size: 1.35rem; }
+  .rail .num { opacity: .95; margin-bottom: 18px; }
+  .rail .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    opacity: .75;
+    margin: 14px 0 3px;
+  }
+  .total-box {
+    margin-top: 28px;
+    background: rgba(255,255,255,.1);
+    border-left: 3px solid var(--amber);
+    padding: 12px;
+  }
+  .total-box .t-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; opacity: .85; }
+  .total-box .t-amt { font-size: 1.25rem; font-weight: 800; margin-top: 4px; }
+  .total-box .t-amt span { color: var(--amber); }
+  .content { padding: 20px 18px; }
+  .supplier { font-size: 12px; color: var(--muted); line-height: 1.4; margin-bottom: 12px; }
+  .supplier strong { color: var(--teal); font-size: 13px; }
+  .client {
+    border: 1px solid #d9e2ec;
+    border-left: 4px solid var(--amber);
+    background: #fffaf3;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .client .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  table.items { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.items th {
+    text-align: left;
+    padding: 8px 6px;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--teal);
+    background: #f0f4f8;
+    border-bottom: 2px solid var(--teal);
+  }
+  table.items td { padding: 9px 6px; border-bottom: 1px solid #e2e8f0; }
+  .bottom { margin-top: 18px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .footer {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 10px;
+    border-top: 1px solid #e2e8f0;
+    background: #fafbfc;
+  }
+  .compare { margin-top: 18px; font-size: 14px; }
+  .compare a { color: var(--teal); font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="intro">
+      <h1>Machetă „DateConta B”</h1>
+      <p>
+        Variantă alternativă: coloană brand teal pe stânga (tip document, date, total cu accent amber),
+        conținut aerisit pe dreapta. Tot în culorile site-ului. Neaplicată încă.
+      </p>
+      <div class="badge">Variantă B — previzualizare</div>
+    </div>
+
+    <div class="sheet">
+      <div class="rail">
+        <div class="pill">DateConta</div>
+        <h2>FACTURĂ</h2>
+        <div class="num">FD-2026-0042</div>
+        <div class="label">Data</div>
+        <div>13 / 08 / 2026</div>
+        <div class="label">Scadență</div>
+        <div>28 / 08 / 2026</div>
+        <div class="total-box">
+          <div class="t-label">Total de plată</div>
+          <div class="t-amt"><span>2.117,50</span> RON</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="supplier">
+          <strong>Furnizor</strong><br>
+          FLY DAVID SRL<br>
+          CUI 38254880 · J40/16280/2017<br>
+          București
+        </div>
+        <div class="client">
+          <div class="label">Client</div>
+          <strong>Client Exemplu SRL</strong><br>
+          CUI 12345678<br>
+          Str. Exemplu nr. 1, București
+        </div>
+        <table class="items">
+          <thead>
+            <tr>
+              <th>Denumire</th>
+              <th>UM</th>
+              <th>Cant.</th>
+              <th>Preț</th>
+              <th>TVA</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Servicii consultanță<br><span style="color:#627d98;font-size:11px">Luna august 2026</span></td>
+              <td>buc</td>
+              <td>1,00</td>
+              <td>1.000,00</td>
+              <td>21,00%</td>
+              <td>1.210,00</td>
+            </tr>
+            <tr>
+              <td>Suport tehnic</td>
+              <td>ore</td>
+              <td>5,00</td>
+              <td>150,00</td>
+              <td>21,00%</td>
+              <td>907,50</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="bottom">
+          Factura este valabilă fără semnătură și ștampilă, conform art. 319 alin. 29 din Legea 227/2015.
+        </div>
+      </div>
+      <div class="footer">Document generat cu DateConta Facturare</div>
+    </div>
+
+    <p class="compare">
+      Compară cu <a href="preview-template-dateconta.html">varianta A (antet full)</a>.
+      Spune-mi pe care o vrei (A, B, sau ambele pe firme diferite).
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+---
+description: Actualizează manualul Ajutor odată cu modificările din aplicație
+alwaysApply: true
+---
+
+# Manual Ajutor — sincron cu produsul
+
+Manualul e în `resources/views/help/` (+ `config/help.php`, capturi în `public/images/help/`).
+Meniu: **Ajutor** → `/ajutor` și `/ajutor/{section}`.
+
+## Obligatoriu la schimbări de produs
+
+După orice îmbunătățire / feature / schimbare de flux vizibilă pentru utilizator, **actualizează atât help-ul, cât și changelog-ul** („Ce este nou…”):
+
+1. **Actualizează capitolul relevant** din `resources/views/help/sections/*.blade.php` (pași, note, avertismente).
+2. Dacă apare un ecran/flux nou: adaugă secțiune în `config/help.php` + view + link în cuprins/nav Ajutor dacă merită.
+3. **Reînnoiește capturile** afectate din `public/images/help/{shot}.png` (sau notează în răspuns dacă nu s-au putut captura).
+4. **Bump + note** în `config/changelog.php` — comanda `app:bump-version --notes=...` (vezi regula `version-bump`).
+5. Include fișierele help + changelog + imagini în deploy, împreună cu bump-ul de versiune.
+6. Menționează pe scurt că help-ul și istoricul („Ce este nou…”) au fost actualizate.
+
+Nu lăsa doar una dintre cele două: help fără changelog, sau changelog fără help.
+
+## Ce să actualizezi în text
+
+- Pași care nu mai corespund UI-ului (butoane, meniuri, câmpuri).
+- Reguli noi (ex.: produs obligatoriu / descriere opțională, limbă UI vs PDF, adresă ANAF fără județ/oraș).
+- FAQ (`intrebari.blade.php`) dacă apare o întrebare tipică nouă.
+
+## Nu e nevoie de update help / changelog
+
+- Fix-uri interne fără impact UI/flux
+- Refactor fără schimbare de comportament pentru utilizator
+- Doar explorare / planificare
+- **Funcții doar pentru admin** (panou admin, suport pe firme, asociere utilizator↔societate etc.) — nu apar în manualul public și nici în „Ce este nou…”

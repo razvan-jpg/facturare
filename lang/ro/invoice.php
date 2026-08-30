@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Factură',
+    'type_proforma' => 'Proformă',
+    'type_delivery' => 'Aviz',
+    'type_receipt' => 'Chitanță',
+    'type_credit_note' => 'Notă de creditare',
+    'draft' => 'Draft',
+    'date' => 'Data',
+    'due_date' => 'Scadență',
+    'supplier' => 'Furnizor',
+    'client' => 'Client',
+    'cui' => 'CUI',
+    'iban' => 'IBAN',
+    'name' => 'Denumire',
+    'unit' => 'UM',
+    'qty' => 'Cant.',
+    'price' => 'Preț',
+    'vat' => 'TVA',
+    'total' => 'Total',
+    'subtotal' => 'Subtotal',
+    'signature' => 'Semnătură',
+    'stamp' => 'Ștampilă',
+    'exchange_rate' => 'Curs',
+    'ron_equivalent' => 'Echivalent',
+    'generated' => 'Document generat cu DateConta Facturare',
+];

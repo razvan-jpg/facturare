@@ -1,0 +1,413 @@
+@import './marketing.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --dc-ink: #102a43;
+    --dc-teal: #0f4c5c;
+    --dc-teal-dark: #0a3440;
+    --dc-sand: #f3efe6;
+    --dc-accent: #d97706;
+    --dc-line: #d9e2ec;
+}
+
+body {
+    color: var(--dc-ink);
+}
+
+.dc-gradient {
+    background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(15, 76, 92, 0.18), transparent 55%),
+        radial-gradient(900px 420px at 90% 0%, rgba(217, 119, 6, 0.12), transparent 50%),
+        linear-gradient(180deg, #f7f4ee 0%, #eef3f6 100%);
+}
+
+.dc-sidebar {
+    background: linear-gradient(180deg, var(--dc-teal) 0%, var(--dc-teal-dark) 100%);
+}
+
+.dc-card {
+    @apply bg-white border border-slate-200/80 rounded-xl shadow-sm;
+}
+
+.dc-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition;
+}
+
+.dc-btn-primary {
+    @apply dc-btn text-[#1a1205];
+    background: #e08a1e;
+}
+
+.dc-btn-primary:hover {
+    background: #f0a43a;
+}
+
+.dc-btn-secondary {
+    @apply dc-btn bg-white text-slate-800 border border-slate-300 hover:bg-slate-50;
+}
+
+.dc-btn-disabled,
+.dc-btn-primary.dc-btn-disabled,
+a.dc-btn-disabled,
+span.dc-btn-disabled {
+    @apply dc-btn cursor-not-allowed pointer-events-none select-none;
+    background: #cbd5e1 !important;
+    color: #64748b !important;
+    border: 1px solid #94a3b8 !important;
+    box-shadow: none !important;
+    opacity: 1;
+}
+
+.dc-nav-active {
+    background: #ffd089 !important;
+    color: #0a3440 !important;
+    font-weight: 700;
+}
+
+.dc-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.3rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.15rem;
+}
+
+.dc-tab {
+    @apply rounded-md font-medium border transition;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.28rem 0.5rem;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    background: #fff;
+    color: #334e68;
+    border-color: #d9e2ec;
+    text-decoration: none;
+}
+
+.dc-tab:hover {
+    border-color: #e08a1e;
+    color: #0a3440;
+}
+
+.dc-tab-active {
+    background: #e08a1e !important;
+    color: #1a1205 !important;
+    border-color: #b86a0a !important;
+    font-weight: 700;
+}
+
+.dc-tab-soon {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+@media (min-width: 1280px) {
+    .dc-tab {
+        padding: 0.32rem 0.55rem;
+        font-size: 0.76rem;
+    }
+}
+
+.dc-input {
+    @apply w-full rounded-lg border-slate-300 shadow-sm focus:border-teal-700 focus:ring-teal-700 text-sm;
+}
+
+.dc-label {
+    @apply block text-sm font-medium text-slate-700 mb-1;
+}
+
+.dc-table th {
+    @apply text-left text-xs uppercase tracking-wide text-slate-500 font-semibold px-3 py-2 bg-slate-50;
+}
+
+.dc-table td {
+    @apply px-3 py-2.5 text-sm border-t border-slate-100;
+}
+
+/* Auth guest pages — atmosferă brand (login, register, reset parolă) */
+.dc-auth {
+    position: relative;
+    min-height: 100vh;
+    color: var(--dc-ink);
+    background: #0a3440;
+    overflow-x: hidden;
+}
+
+.dc-auth-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(900px 520px at 12% 10%, rgba(224, 138, 30, 0.28), transparent 55%),
+        radial-gradient(700px 480px at 88% 18%, rgba(31, 122, 108, 0.35), transparent 50%),
+        linear-gradient(145deg, #0a3440 0%, #0f4c5c 48%, #123d4a 100%);
+}
+
+.dc-auth-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.14;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(ellipse at 40% 30%, #000 20%, transparent 75%);
+}
+
+.dc-auth-blob {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(2px);
+    opacity: 0.55;
+}
+
+.dc-auth-blob-a {
+    width: 18rem;
+    height: 18rem;
+    top: -4rem;
+    right: -3rem;
+    background: radial-gradient(circle, rgba(255, 208, 137, 0.45), transparent 70%);
+}
+
+.dc-auth-blob-b {
+    width: 22rem;
+    height: 22rem;
+    bottom: -6rem;
+    left: -5rem;
+    background: radial-gradient(circle, rgba(31, 122, 108, 0.5), transparent 70%);
+}
+
+.dc-auth-blob-c {
+    width: 12rem;
+    height: 12rem;
+    top: 42%;
+    left: 38%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12), transparent 70%);
+}
+
+.dc-auth-shell {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 960px) {
+    .dc-auth-shell {
+        grid-template-columns: minmax(18rem, 1.05fr) minmax(22rem, 0.95fr);
+    }
+}
+
+.dc-auth-aside {
+    display: none;
+    color: #f7fafc;
+    padding: 2.5rem 2.75rem;
+    align-items: center;
+}
+
+@media (min-width: 960px) {
+    .dc-auth-aside {
+        display: flex;
+    }
+}
+
+.dc-auth-aside-inner {
+    max-width: 28rem;
+}
+
+.dc-auth-aside-title {
+    margin: 1.75rem 0 0.85rem;
+    font-size: clamp(2rem, 3.4vw, 2.85rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 14ch;
+}
+
+.dc-auth-aside-lead {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: rgba(247, 250, 252, 0.88);
+    max-width: 34rem;
+}
+
+.dc-auth-aside-list {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.65rem;
+}
+
+.dc-auth-aside-list li {
+    position: relative;
+    padding-left: 1.35rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffe8b0;
+}
+
+.dc-auth-aside-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #e08a1e;
+    box-shadow: 0 0 0 3px rgba(224, 138, 30, 0.25);
+}
+
+.dc-auth-aside-mock {
+    margin-top: 2rem;
+}
+
+.dc-auth-mock-card {
+    display: grid;
+    gap: 0.25rem;
+    width: min(16rem, 100%);
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 208, 137, 0.45);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(10, 52, 64, 0.35));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+    transform: rotate(-4deg);
+}
+
+.dc-auth-mock-card span {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #ffd089;
+}
+
+.dc-auth-mock-card strong {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.dc-auth-mock-card em {
+    font-style: normal;
+    font-size: 0.85rem;
+    color: rgba(247, 250, 252, 0.75);
+}
+
+.dc-auth-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.5rem 1.1rem 2rem;
+    background:
+        linear-gradient(180deg, rgba(246, 241, 232, 0.97) 0%, rgba(232, 238, 242, 0.96) 100%);
+    min-height: 100vh;
+}
+
+@media (min-width: 960px) {
+    .dc-auth-main {
+        padding: 2.5rem 2.5rem 2.5rem 2rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: -24px 0 60px rgba(0, 0, 0, 0.18);
+    }
+}
+
+.dc-auth-main-brand {
+    display: flex;
+    justify-content: center;
+}
+
+.dc-auth-panel {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.35rem;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(15, 76, 92, 0.12);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.8) inset,
+        0 18px 40px rgba(10, 52, 64, 0.12);
+}
+
+@media (min-width: 640px) {
+    .dc-auth-panel {
+        padding: 1.85rem 1.75rem;
+    }
+}
+
+.dc-auth-heading {
+    margin-bottom: 1.25rem;
+}
+
+.dc-auth-kicker {
+    margin: 0 0 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #b86a0a;
+}
+
+.dc-auth-title {
+    margin: 0;
+    font-size: 1.75rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--dc-teal-dark);
+}
+
+.dc-auth-sub {
+    margin: 0.45rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: #486581;
+}
+
+.dc-auth-footer {
+    margin: 0 auto;
+    max-width: 28rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem 0.65rem;
+    font-size: 0.85rem;
+    color: #627d98;
+}
+
+.dc-auth-footer a {
+    color: var(--dc-teal);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.dc-auth-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dc-auth-mock-card {
+        transform: none;
+    }
+}

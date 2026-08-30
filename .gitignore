@@ -1,0 +1,64 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.*
+!.env.example
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+/ios/.derivedData
+
+# OS
+.DS_Store
+**/.DS_Store
+
+# Secrets / payment keys (never commit)
+*.key
+*.pem
+!storage/certs/*.pem
+Signature netopia.rtf
+storage/app/netopia/private.key
+storage/app/netopia/public.cer
+
+# Local toolchains and archives
+/.tools
+/node.tgz
+
+# Scratch, logs, generated local files
+/tmp
+/tmp-promo-codes
+/storage/tmp
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/trafic-*
+
+# Android: keep wrapper jar/properties, ignore caches and SDK paths
+/android/.gradle
+/android/.kotlin
+/android/build
+/android/.idea
+/android/local.properties
+/android/gradle/caches
+/android/gradle/daemon
+/android/gradle/native
+/android/gradle/kotlin-profile
+/android/gradle/.tmp
+/android/gradle/wrapper/dists
+
+# iOS build leftovers
+/ios/build
+**/xcuserdata/
+**/*.xcuserstate

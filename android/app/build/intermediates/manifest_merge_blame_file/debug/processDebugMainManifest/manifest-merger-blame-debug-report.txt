@@ -1,0 +1,471 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="ro.dateconta.facturare"
+4    android:versionCode="1"
+5    android:versionName="1.0.001" >
+6
+7    <uses-sdk
+7-->INJECTED
+8        android:minSdkVersion="26"
+8-->INJECTED
+9        android:targetSdkVersion="35" />
+9-->INJECTED
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:4:5-67
+11-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:5:5-79
+12-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:5:22-76
+13    <uses-permission android:name="android.permission.WAKE_LOCK" />
+13-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:23:5-68
+13-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:23:22-65
+14    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+14-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:25:5-81
+14-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:25:22-78
+15    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+15-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:26:5-77
+15-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:26:22-74
+16    <uses-permission android:name="com.android.vending.BILLING" />
+16-->[com.android.billingclient:billing-ktx:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7174d9ead3a4122246af224e1d3b249e/transformed/billing-ktx-7.1.1/AndroidManifest.xml:9:5-67
+16-->[com.android.billingclient:billing-ktx:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7174d9ead3a4122246af224e1d3b249e/transformed/billing-ktx-7.1.1/AndroidManifest.xml:9:22-64
+17
+18    <queries>
+18-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:12:5-19:15
+19        <intent>
+19-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:13:9-15:18
+20            <action android:name="com.android.vending.billing.InAppBillingService.BIND" />
+20-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:14:13-91
+20-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:14:21-88
+21        </intent>
+22        <intent>
+22-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:16:9-18:18
+23            <action android:name="com.google.android.apps.play.billingtestcompanion.BillingOverrideService.BIND" />
+23-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:17:13-116
+23-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:17:21-113
+24        </intent>
+25    </queries>
+26
+27    <permission
+27-->[androidx.core:core:1.15.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/09a7649ab1a1f2d2d449bd92dcd62d46/transformed/core-1.15.0/AndroidManifest.xml:22:5-24:47
+28        android:name="ro.dateconta.facturare.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+28-->[androidx.core:core:1.15.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/09a7649ab1a1f2d2d449bd92dcd62d46/transformed/core-1.15.0/AndroidManifest.xml:23:9-81
+29        android:protectionLevel="signature" />
+29-->[androidx.core:core:1.15.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/09a7649ab1a1f2d2d449bd92dcd62d46/transformed/core-1.15.0/AndroidManifest.xml:24:9-44
+30
+31    <uses-permission android:name="ro.dateconta.facturare.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+31-->[androidx.core:core:1.15.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/09a7649ab1a1f2d2d449bd92dcd62d46/transformed/core-1.15.0/AndroidManifest.xml:26:5-97
+31-->[androidx.core:core:1.15.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/09a7649ab1a1f2d2d449bd92dcd62d46/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
+32
+33    <application
+33-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:7:5-36:19
+34        android:name="ro.dateconta.facturare.FacturareApp"
+34-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:8:9-37
+35        android:allowBackup="true"
+35-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:9:9-35
+36        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+36-->[androidx.core:core:1.15.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/09a7649ab1a1f2d2d449bd92dcd62d46/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
+37        android:debuggable="true"
+38        android:extractNativeLibs="false"
+38-->INJECTED
+39        android:icon="@mipmap/ic_launcher"
+39-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:10:9-43
+40        android:label="@string/app_name"
+40-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:11:9-41
+41        android:roundIcon="@mipmap/ic_launcher"
+41-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:12:9-48
+42        android:supportsRtl="true"
+42-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:13:9-35
+43        android:testOnly="true"
+44        android:theme="@style/Theme.Facturare"
+44-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:14:9-47
+45        android:usesCleartextTraffic="false" >
+45-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:15:9-45
+46        <activity
+46-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:16:9-25:20
+47            android:name="ro.dateconta.facturare.MainActivity"
+47-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:17:13-41
+48            android:exported="true"
+48-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:18:13-36
+49            android:theme="@style/Theme.Facturare"
+49-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:19:13-51
+50            android:windowSoftInputMode="adjustResize" >
+50-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:20:13-55
+51            <intent-filter>
+51-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:21:13-24:29
+52                <action android:name="android.intent.action.MAIN" />
+52-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:22:17-69
+52-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:22:25-66
+53
+54                <category android:name="android.intent.category.LAUNCHER" />
+54-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:23:17-77
+54-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:23:27-74
+55            </intent-filter>
+56        </activity>
+57
+58        <provider
+58-->INJECTED
+59            android:name="androidx.core.content.FileProvider"
+59-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:28:13-62
+60            android:authorities="ro.dateconta.facturare.fileprovider"
+60-->INJECTED
+61            android:exported="false"
+61-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:30:13-37
+62            android:grantUriPermissions="true" >
+62-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:31:13-47
+63            <meta-data
+63-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:32:13-34:54
+64                android:name="android.support.FILE_PROVIDER_PATHS"
+64-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:33:17-67
+65                android:resource="@xml/file_paths" />
+65-->/Users/razvanivan/Developer/00 - projects/Facturare/android/app/src/main/AndroidManifest.xml:34:17-51
+66        </provider>
+67        <provider
+67-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:29:9-37:20
+68            android:name="androidx.startup.InitializationProvider"
+68-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:30:13-67
+69            android:authorities="ro.dateconta.facturare.androidx-startup"
+69-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:31:13-68
+70            android:exported="false" >
+70-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:32:13-37
+71            <meta-data
+71-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:34:13-36:52
+72                android:name="androidx.work.WorkManagerInitializer"
+72-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:35:17-68
+73                android:value="androidx.startup" />
+73-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:36:17-49
+74            <meta-data
+74-->[androidx.emoji2:emoji2:1.3.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/244d7c9c1a67a08b4fd70dc2ef705ba6/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+75                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+75-->[androidx.emoji2:emoji2:1.3.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/244d7c9c1a67a08b4fd70dc2ef705ba6/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+76                android:value="androidx.startup" />
+76-->[androidx.emoji2:emoji2:1.3.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/244d7c9c1a67a08b4fd70dc2ef705ba6/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+77            <meta-data
+77-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/355f7046178a2d7e233c7e5be6a9c02f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
+78                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+78-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/355f7046178a2d7e233c7e5be6a9c02f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
+79                android:value="androidx.startup" />
+79-->[androidx.lifecycle:lifecycle-process:2.8.7] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/355f7046178a2d7e233c7e5be6a9c02f/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
+80            <meta-data
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+81                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+82                android:value="androidx.startup" />
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+83        </provider>
+84
+85        <service
+85-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:39:9-45:35
+86            android:name="androidx.work.impl.background.systemalarm.SystemAlarmService"
+86-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:40:13-88
+87            android:directBootAware="false"
+87-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:41:13-44
+88            android:enabled="@bool/enable_system_alarm_service_default"
+88-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:42:13-72
+89            android:exported="false" />
+89-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:43:13-37
+90        <service
+90-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:46:9-52:35
+91            android:name="androidx.work.impl.background.systemjob.SystemJobService"
+91-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:47:13-84
+92            android:directBootAware="false"
+92-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:48:13-44
+93            android:enabled="@bool/enable_system_job_service_default"
+93-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:49:13-70
+94            android:exported="true"
+94-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:50:13-36
+95            android:permission="android.permission.BIND_JOB_SERVICE" />
+95-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:51:13-69
+96        <service
+96-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:53:9-59:35
+97            android:name="androidx.work.impl.foreground.SystemForegroundService"
+97-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:54:13-81
+98            android:directBootAware="false"
+98-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:55:13-44
+99            android:enabled="@bool/enable_system_foreground_service_default"
+99-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:56:13-77
+100            android:exported="false" />
+100-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:57:13-37
+101
+102        <receiver
+102-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:61:9-66:35
+103            android:name="androidx.work.impl.utils.ForceStopRunnable$BroadcastReceiver"
+103-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:62:13-88
+104            android:directBootAware="false"
+104-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:63:13-44
+105            android:enabled="true"
+105-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:64:13-35
+106            android:exported="false" />
+106-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:65:13-37
+107        <receiver
+107-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:67:9-77:20
+108            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryChargingProxy"
+108-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:68:13-106
+109            android:directBootAware="false"
+109-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:69:13-44
+110            android:enabled="false"
+110-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:70:13-36
+111            android:exported="false" >
+111-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:71:13-37
+112            <intent-filter>
+112-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:73:13-76:29
+113                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+113-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:74:17-87
+113-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:74:25-84
+114                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+114-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:75:17-90
+114-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:75:25-87
+115            </intent-filter>
+116        </receiver>
+117        <receiver
+117-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:78:9-88:20
+118            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$BatteryNotLowProxy"
+118-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:79:13-104
+119            android:directBootAware="false"
+119-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:80:13-44
+120            android:enabled="false"
+120-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:81:13-36
+121            android:exported="false" >
+121-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:82:13-37
+122            <intent-filter>
+122-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:84:13-87:29
+123                <action android:name="android.intent.action.BATTERY_OKAY" />
+123-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:85:17-77
+123-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:85:25-74
+124                <action android:name="android.intent.action.BATTERY_LOW" />
+124-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:86:17-76
+124-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:86:25-73
+125            </intent-filter>
+126        </receiver>
+127        <receiver
+127-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:89:9-99:20
+128            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$StorageNotLowProxy"
+128-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:90:13-104
+129            android:directBootAware="false"
+129-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:91:13-44
+130            android:enabled="false"
+130-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:92:13-36
+131            android:exported="false" >
+131-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:93:13-37
+132            <intent-filter>
+132-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:95:13-98:29
+133                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+133-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:96:17-83
+133-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:96:25-80
+134                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+134-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:97:17-82
+134-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:97:25-79
+135            </intent-filter>
+136        </receiver>
+137        <receiver
+137-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:100:9-109:20
+138            android:name="androidx.work.impl.background.systemalarm.ConstraintProxy$NetworkStateProxy"
+138-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:101:13-103
+139            android:directBootAware="false"
+139-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:102:13-44
+140            android:enabled="false"
+140-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:103:13-36
+141            android:exported="false" >
+141-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:104:13-37
+142            <intent-filter>
+142-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:106:13-108:29
+143                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+143-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:107:17-79
+143-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:107:25-76
+144            </intent-filter>
+145        </receiver>
+146        <receiver
+146-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:110:9-121:20
+147            android:name="androidx.work.impl.background.systemalarm.RescheduleReceiver"
+147-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:111:13-88
+148            android:directBootAware="false"
+148-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:112:13-44
+149            android:enabled="false"
+149-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:113:13-36
+150            android:exported="false" >
+150-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:114:13-37
+151            <intent-filter>
+151-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:116:13-120:29
+152                <action android:name="android.intent.action.BOOT_COMPLETED" />
+152-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:117:17-79
+152-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:117:25-76
+153                <action android:name="android.intent.action.TIME_SET" />
+153-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:118:17-73
+153-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:118:25-70
+154                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+154-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:119:17-81
+154-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:119:25-78
+155            </intent-filter>
+156        </receiver>
+157        <receiver
+157-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:122:9-131:20
+158            android:name="androidx.work.impl.background.systemalarm.ConstraintProxyUpdateReceiver"
+158-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:123:13-99
+159            android:directBootAware="false"
+159-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:124:13-44
+160            android:enabled="@bool/enable_system_alarm_service_default"
+160-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:125:13-72
+161            android:exported="false" >
+161-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:126:13-37
+162            <intent-filter>
+162-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:128:13-130:29
+163                <action android:name="androidx.work.impl.background.systemalarm.UpdateProxies" />
+163-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:129:17-98
+163-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:129:25-95
+164            </intent-filter>
+165        </receiver>
+166        <receiver
+166-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:132:9-142:20
+167            android:name="androidx.work.impl.diagnostics.DiagnosticsReceiver"
+167-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:133:13-78
+168            android:directBootAware="false"
+168-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:134:13-44
+169            android:enabled="true"
+169-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:135:13-35
+170            android:exported="true"
+170-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:136:13-36
+171            android:permission="android.permission.DUMP" >
+171-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:137:13-57
+172            <intent-filter>
+172-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:139:13-141:29
+173                <action android:name="androidx.work.diagnostics.REQUEST_DIAGNOSTICS" />
+173-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:140:17-88
+173-->[androidx.work:work-runtime:2.10.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/7363863949fc5a3a83a6c8cd8de97c55/transformed/work-runtime-2.10.0/AndroidManifest.xml:140:25-85
+174            </intent-filter>
+175        </receiver>
+176
+177        <activity
+177-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/b171408ac1f9f5a71d8800f74eb23f9f/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+178            android:name="androidx.compose.ui.tooling.PreviewActivity"
+178-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/b171408ac1f9f5a71d8800f74eb23f9f/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+179            android:exported="true" />
+179-->[androidx.compose.ui:ui-tooling-android:1.7.6] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/b171408ac1f9f5a71d8800f74eb23f9f/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+180        <activity
+180-->[androidx.compose.ui:ui-test-manifest:1.7.6] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/73ccdf8a61ac6763b87536f85be027c9/transformed/ui-test-manifest-1.7.6/AndroidManifest.xml:23:9-25:39
+181            android:name="androidx.activity.ComponentActivity"
+181-->[androidx.compose.ui:ui-test-manifest:1.7.6] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/73ccdf8a61ac6763b87536f85be027c9/transformed/ui-test-manifest-1.7.6/AndroidManifest.xml:24:13-63
+182            android:exported="true" />
+182-->[androidx.compose.ui:ui-test-manifest:1.7.6] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/73ccdf8a61ac6763b87536f85be027c9/transformed/ui-test-manifest-1.7.6/AndroidManifest.xml:25:13-36
+183
+184        <meta-data
+184-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:22:9-24:37
+185            android:name="com.google.android.play.billingclient.version"
+185-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:23:13-73
+186            android:value="7.1.1" />
+186-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:24:13-34
+187
+188        <activity
+188-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:26:9-30:75
+189            android:name="com.android.billingclient.api.ProxyBillingActivity"
+189-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:27:13-78
+190            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+190-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:28:13-96
+191            android:exported="false"
+191-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:29:13-37
+192            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+192-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:30:13-72
+193        <activity
+193-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:31:9-35:75
+194            android:name="com.android.billingclient.api.ProxyBillingActivityV2"
+194-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:32:13-80
+195            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+195-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:33:13-96
+196            android:exported="false"
+196-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:34:13-37
+197            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+197-->[com.android.billingclient:billing:7.1.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/ab2141437f8805fdbbcca51e48690a45/transformed/billing-7.1.1/AndroidManifest.xml:35:13-72
+198        <activity
+198-->[com.google.android.gms:play-services-base:18.5.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/dca49cd046ac31324e7713ecf8c5538f/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:9-173
+199            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+199-->[com.google.android.gms:play-services-base:18.5.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/dca49cd046ac31324e7713ecf8c5538f/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:19-85
+200            android:exported="false"
+200-->[com.google.android.gms:play-services-base:18.5.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/dca49cd046ac31324e7713ecf8c5538f/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:146-170
+201            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+201-->[com.google.android.gms:play-services-base:18.5.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/dca49cd046ac31324e7713ecf8c5538f/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:86-145
+202
+203        <meta-data
+203-->[com.google.android.gms:play-services-basement:18.4.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/39475ae6348a9056662e2de02a06934c/transformed/play-services-basement-18.4.0/AndroidManifest.xml:6:9-122
+204            android:name="com.google.android.gms.version"
+204-->[com.google.android.gms:play-services-basement:18.4.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/39475ae6348a9056662e2de02a06934c/transformed/play-services-basement-18.4.0/AndroidManifest.xml:6:20-65
+205            android:value="@integer/google_play_services_version" />
+205-->[com.google.android.gms:play-services-basement:18.4.0] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/39475ae6348a9056662e2de02a06934c/transformed/play-services-basement-18.4.0/AndroidManifest.xml:6:66-119
+206
+207        <service
+207-->[androidx.room:room-runtime-android:2.8.4] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/25ab8c73e03feb9e6de6263f51222a56/transformed/room-runtime/AndroidManifest.xml:24:9-28:63
+208            android:name="androidx.room.MultiInstanceInvalidationService"
+208-->[androidx.room:room-runtime-android:2.8.4] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/25ab8c73e03feb9e6de6263f51222a56/transformed/room-runtime/AndroidManifest.xml:25:13-74
+209            android:directBootAware="true"
+209-->[androidx.room:room-runtime-android:2.8.4] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/25ab8c73e03feb9e6de6263f51222a56/transformed/room-runtime/AndroidManifest.xml:26:13-43
+210            android:exported="false" />
+210-->[androidx.room:room-runtime-android:2.8.4] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/25ab8c73e03feb9e6de6263f51222a56/transformed/room-runtime/AndroidManifest.xml:27:13-37
+211
+212        <receiver
+212-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+213            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+213-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+214            android:directBootAware="false"
+214-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+215            android:enabled="true"
+215-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+216            android:exported="true"
+216-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+217            android:permission="android.permission.DUMP" >
+217-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+218            <intent-filter>
+218-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+219                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+219-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+219-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+220            </intent-filter>
+221            <intent-filter>
+221-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+222                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+222-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+222-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+223            </intent-filter>
+224            <intent-filter>
+224-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+225                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+225-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+225-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+226            </intent-filter>
+227            <intent-filter>
+227-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+228                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+228-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+228-->[androidx.profileinstaller:profileinstaller:1.3.1] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/8058787e2506fd6d9e7f19b64b0bfe5f/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+229            </intent-filter>
+230        </receiver>
+231
+232        <service
+232-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/c6623cbc8bb8159f21296625b7e72200/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+233            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+233-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/c6623cbc8bb8159f21296625b7e72200/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+234            android:exported="false" >
+234-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/c6623cbc8bb8159f21296625b7e72200/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+235            <meta-data
+235-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/c6623cbc8bb8159f21296625b7e72200/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+236                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+236-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/c6623cbc8bb8159f21296625b7e72200/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+237                android:value="cct" />
+237-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/c6623cbc8bb8159f21296625b7e72200/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+238        </service>
+239        <service
+239-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+240            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+240-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+241            android:exported="false"
+241-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+242            android:permission="android.permission.BIND_JOB_SERVICE" >
+242-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+243        </service>
+244
+245        <receiver
+245-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+246            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+246-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
+247            android:exported="false" />
+247-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/razvanivan/Developer/00 - projects/Facturare/android/gradle/caches/9.5.1/transforms/466526ad9526ad87e0b7fd93a70c6ebc/transformed/transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+248    </application>
+249
+250</manifest>

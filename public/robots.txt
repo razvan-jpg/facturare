@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /dashboard
+Disallow: /documents
+Disallow: /clients
+Disallow: /products
+Disallow: /companies
+Disallow: /payments
+Disallow: /reports
+Disallow: /recurring
+Disallow: /admin
+Disallow: /profile
+Disallow: /ajutor
+Disallow: /login
+Disallow: /register
+Allow: /
+
+Sitemap: https://factura.dateconta.ro/sitemap.xml

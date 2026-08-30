@@ -1,0 +1,32 @@
+---
+description: Incrementează versiunea prin istoricul „Ce este nou…”
+alwaysApply: true
+---
+
+# Versionare DateConta Facturare
+
+**Sursă unică:** `config/changelog.php` — prima intrare (cea mai recentă) = versiunea curentă.
+`config('dateconta.version')` și footer-ul citesc automat acea valoare.
+Ecran: **Ajutor → Ce este nou…** (`/ajutor/ce-este-nou`).
+
+## Format
+
+`MAJOR.MINOR.PATCH` cu PATCH pe 3 cifre: `1.0.030`
+
+## La îmbunătățiri / adăugiri majore (obligatoriu)
+
+La orice noutate de produs vizibilă utilizatorilor: **changelog + help** (nu doar unul).
+
+1. Rulează:
+   ```bash
+   php artisan app:bump-version --title="Titlu scurt" --notes="Punct 1" --notes="Punct 2"
+   ```
+   Sau adaugă manual un bloc **sus** în `config/changelog.php` (devine imediat versiunea curentă).
+2. Actualizează manualul Ajutor (regula `help-manual`) — același set de schimbări.
+3. Deploy: `config/changelog.php` (+ `config/dateconta.php` dacă s-a schimbat modul de citire), help afectat; `config:clear` / `view:clear`.
+4. Menționează noua versiune în răspuns și că help + „Ce este nou…” au fost actualizate.
+
+## Nu bump
+
+- Fix-uri minore, bug-uri mici fără impact produs, explorare/planificare
+- **Funcții doar pentru admin** — implementare/deploy fără intrare în `config/changelog.php` și fără bump doar pentru asta

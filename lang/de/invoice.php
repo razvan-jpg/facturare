@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Rechnung',
+    'type_proforma' => 'Proforma-Rechnung',
+    'type_delivery' => 'Lieferschein',
+    'type_receipt' => 'Quittung',
+    'type_credit_note' => 'Gutschrift',
+    'draft' => 'Entwurf',
+    'date' => 'Datum',
+    'due_date' => 'Fälligkeit',
+    'supplier' => 'Lieferant',
+    'client' => 'Kunde',
+    'cui' => 'USt-IdNr.',
+    'iban' => 'IBAN',
+    'name' => 'Bezeichnung',
+    'unit' => 'ME',
+    'qty' => 'Menge',
+    'price' => 'Preis',
+    'vat' => 'MwSt.',
+    'total' => 'Gesamt',
+    'subtotal' => 'Zwischensumme',
+    'signature' => 'Unterschrift',
+    'stamp' => 'Stempel',
+    'exchange_rate' => 'Kurs',
+    'ron_equivalent' => 'Gegenwert',
+    'generated' => 'Dokument erstellt mit DateConta Facturare',
+];

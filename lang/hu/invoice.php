@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Számla',
+    'type_proforma' => 'Díjbekérő',
+    'type_delivery' => 'Szállítólevél',
+    'type_receipt' => 'Nyugta',
+    'type_credit_note' => 'Jóváíró számla',
+    'draft' => 'Piszkozat',
+    'date' => 'Dátum',
+    'due_date' => 'Fizetési határidő',
+    'supplier' => 'Szállító',
+    'client' => 'Vevő',
+    'cui' => 'Adószám',
+    'iban' => 'IBAN',
+    'name' => 'Megnevezés',
+    'unit' => 'ME',
+    'qty' => 'Menny.',
+    'price' => 'Egységár',
+    'vat' => 'ÁFA',
+    'total' => 'Összesen',
+    'subtotal' => 'Részösszeg',
+    'signature' => 'Aláírás',
+    'stamp' => 'Bélyegző',
+    'exchange_rate' => 'Árfolyam',
+    'ron_equivalent' => 'Egyenérték',
+    'generated' => 'Dokumentum generálva: DateConta Facturare',
+];

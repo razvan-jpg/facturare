@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Facture',
+    'type_proforma' => 'Facture proforma',
+    'type_delivery' => 'Bon de livraison',
+    'type_receipt' => 'Reçu',
+    'type_credit_note' => 'Note de crédit',
+    'draft' => 'Brouillon',
+    'date' => 'Date',
+    'due_date' => 'Échéance',
+    'supplier' => 'Fournisseur',
+    'client' => 'Client',
+    'cui' => 'N° TVA',
+    'iban' => 'IBAN',
+    'name' => 'Désignation',
+    'unit' => 'Ud',
+    'qty' => 'Qté',
+    'price' => 'Prix',
+    'vat' => 'TVA',
+    'total' => 'Total',
+    'subtotal' => 'Sous-total',
+    'signature' => 'Signature',
+    'stamp' => 'Cachet',
+    'exchange_rate' => 'Taux de change',
+    'ron_equivalent' => 'Équivalent',
+    'generated' => 'Document généré avec DateConta Facturare',
+];

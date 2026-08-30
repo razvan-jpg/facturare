@@ -1,0 +1,50 @@
+<style>
+.help-shell {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+@media (max-width: 960px) {
+    .help-shell { grid-template-columns: 1fr; }
+}
+.help-toc { padding: 1rem; position: sticky; top: 0.75rem; }
+.help-toc-title {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: #627d98; margin-bottom: .65rem;
+}
+.help-toc-nav { display: flex; flex-direction: column; gap: .15rem; max-height: 65vh; overflow: auto; }
+.help-toc-nav a {
+    display: block; padding: .45rem .55rem; border-radius: .45rem;
+    font-size: 13px; color: #243b53; text-decoration: none; line-height: 1.35;
+}
+.help-toc-nav a:hover { background: #f0f4f8; }
+.help-toc-nav a.is-active { background: #e6fffa; color: #0f766e; font-weight: 600; }
+.help-toc-meta { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid #e2e8f0; font-size: 11px; color: #829ab1; line-height: 1.5; }
+.help-article { padding: 1.5rem 1.75rem; }
+.help-article h2 { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.65rem; color: #102a43; margin: 0 0 .35rem; }
+.help-article .help-lead { color: #486581; margin-bottom: 1.25rem; font-size: .95rem; }
+.help-article h3 { font-size: 1.1rem; font-weight: 700; color: #243b53; margin: 1.6rem 0 .55rem; }
+.help-article h4 { font-size: .95rem; font-weight: 700; color: #334e68; margin: 1.15rem 0 .4rem; }
+.help-article p, .help-article li { font-size: .92rem; line-height: 1.65; color: #334e68; }
+.help-article p { margin: 0 0 .75rem; }
+.help-article ul, .help-article ol { margin: 0 0 1rem 1.15rem; }
+.help-article li { margin-bottom: .35rem; }
+.help-article ol.help-steps { list-style: decimal; }
+.help-article .help-note {
+    border-left: 3px solid #14b8a6; background: #f0fdfa; padding: .75rem 1rem;
+    border-radius: 0 .5rem .5rem 0; margin: 1rem 0; font-size: .88rem; color: #115e59;
+}
+.help-article .help-warn {
+    border-left: 3px solid #f59e0b; background: #fffbeb; padding: .75rem 1rem;
+    border-radius: 0 .5rem .5rem 0; margin: 1rem 0; font-size: .88rem; color: #92400e;
+}
+.help-article table.legal-table {
+    width: 100%; border-collapse: collapse; font-size: .88rem; margin: 0 0 1rem;
+}
+.help-article table.legal-table th,
+.help-article table.legal-table td {
+    border: 1px solid #e2e8f0; padding: .55rem .65rem; text-align: left; vertical-align: top;
+}
+.help-article table.legal-table th { background: #f8fafc; color: #243b53; font-weight: 700; }
+</style>

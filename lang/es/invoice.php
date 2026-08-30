@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'type_invoice' => 'Factura',
+    'type_proforma' => 'Factura proforma',
+    'type_delivery' => 'Albarán',
+    'type_receipt' => 'Recibo',
+    'type_credit_note' => 'Nota de crédito',
+    'draft' => 'Borrador',
+    'date' => 'Fecha',
+    'due_date' => 'Vencimiento',
+    'supplier' => 'Proveedor',
+    'client' => 'Cliente',
+    'cui' => 'NIF/CIF',
+    'iban' => 'IBAN',
+    'name' => 'Descripción',
+    'unit' => 'Ud',
+    'qty' => 'Cant.',
+    'price' => 'Precio',
+    'vat' => 'IVA',
+    'total' => 'Total',
+    'subtotal' => 'Subtotal',
+    'signature' => 'Firma',
+    'stamp' => 'Sello',
+    'exchange_rate' => 'Tipo de cambio',
+    'ron_equivalent' => 'Equivalente',
+    'generated' => 'Documento generado con DateConta Facturare',
+];

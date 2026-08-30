@@ -1,0 +1,81 @@
+<FilesMatch "\.(php|phtml)$">
+    SetHandler application/x-lsphp81
+</FilesMatch>
+
+Options -Indexes -MultiViews
+ServerSignature Off
+
+# Blochează fișiere sensibile din document root.
+<FilesMatch "(?i)^(\.env.*|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|artisan|\.git.*|\.htaccess|\.user\.ini|error_log|.*\.(sql|bak|old|zip|tar|gz|log|md))$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    # X-Frame-Options scos: blochează Google Tag Assistant; framing e controlat via CSP frame-ancestors în PHP.
+    Header always unset X-Frame-Options
+    Header unset X-Frame-Options
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always unset X-Powered-By
+    Header unset X-Powered-By
+    Header always unset Cross-Origin-Opener-Policy
+    Header unset Cross-Origin-Opener-Policy
+</IfModule>
+
+# Cache lung pentru asset-uri statice (Vite build, imagini, fonturi) — reduce încărcarea PHP.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 30 days"
+    ExpiresByType application/javascript "access plus 30 days"
+    ExpiresByType application/x-javascript "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/gif "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/x-icon "access plus 30 days"
+    ExpiresByType font/woff2 "access plus 30 days"
+    ExpiresByType font/woff "access plus 30 days"
+    ExpiresByType application/font-woff2 "access plus 30 days"
+</IfModule>
+<IfModule mod_headers.c>
+    <FilesMatch "\.(?i:css|js|mjs|png|jpe?g|gif|svg|webp|ico|woff2?|ttf|eot|map)$">
+        Header set Cache-Control "public, max-age=2592000, immutable"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Forțează HTTPS
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Blochează scripturi one-shot / debug rămase din greșeală
+    RewriteRule ^_ - [F,L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
