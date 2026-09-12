@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ExchangeRateService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -111,6 +112,69 @@ class Document extends Model
             || ((bool) $this->auto_email_cc && filled($this->auto_email_cc_address));
     }
 
+    /**
+     * Destinatari la trimiterea automată (emitere) — aceeași logică ca maybeAutoEmailDocument.
+     *
+     * @return array{to: list<string>, cc: list<string>}
+     */
+    public function emailAutoDeliveryTargets(?array $platformCc = null): array
+    {
+        $this->loadMissing('client');
+
+        $to = [];
+        if ($this->auto_email_client) {
+            $to = array_merge(
+                $to,
+                dc_parse_emails($this->client_email ?: $this->client?->email)
+            );
+        }
+        if ($this->auto_email_cc && filled($this->auto_email_cc_address)) {
+            $to = array_merge($to, dc_parse_emails($this->auto_email_cc_address));
+        }
+        $to = array_values(array_unique(array_filter($to)));
+
+        $cc = array_values(array_unique(array_filter(array_map(
+            'trim',
+            $platformCc ?? []
+        ))));
+        if ($this->recurring_invoice_id) {
+            $platform = trim((string) config('dateconta.recurring_document_email_cc', ''));
+            if ($platform !== '') {
+                $cc[] = $platform;
+            }
+        }
+        $cc = array_values(array_unique(array_filter($cc)));
+
+        return ['to' => $to, 'cc' => $cc];
+    }
+
+    /**
+     * Destinatari la retrimitere manuală — client + CC document + CC platformă (ca la emitere).
+     *
+     * @return array{to: list<string>, cc: list<string>}
+     */
+    public function emailManualResendTargets(): array
+    {
+        $this->loadMissing('client');
+
+        $to = dc_parse_emails($this->client_email ?: $this->client?->email);
+        if ($this->auto_email_cc && filled($this->auto_email_cc_address)) {
+            $to = array_merge($to, dc_parse_emails($this->auto_email_cc_address));
+        }
+        $to = array_values(array_unique(array_filter($to)));
+
+        $cc = [];
+        if ($this->recurring_invoice_id) {
+            $platform = trim((string) config('dateconta.recurring_document_email_cc', ''));
+            if ($platform !== '') {
+                $cc[] = $platform;
+            }
+        }
+        $cc = array_values(array_unique(array_filter($cc)));
+
+        return ['to' => $to, 'cc' => $cc];
+    }
+
     public function hasNumberReservation(): bool
     {
         return $this->status === 'draft'
@@ -143,6 +207,87 @@ class Document extends Model
         return $this->hasMany(Payment::class);
     }
 
+    /**
+     * Facturile / proformele acoperite de această chitanță (nr. + data emiterii).
+     *
+     * @return list<array{number: string, date: ?string}>
+     */
+    public function receiptCollectedInvoices(): array
+    {
+        if ($this->type !== 'receipt' || ! filled($this->number_full)) {
+            return [];
+        }
+
+        $fromPayments = Payment::query()
+            ->where('company_id', $this->company_id)
+            ->where('reference', $this->number_full)
+            ->whereNotNull('document_id')
+            ->with(['document:id,number_full,type,issue_date'])
+            ->orderBy('id')
+            ->get()
+            ->map(function (Payment $p) {
+                $doc = $p->document;
+                if (! $doc || ! filled($doc->number_full)) {
+                    return null;
+                }
+
+                return [
+                    'number' => (string) $doc->number_full,
+                    'date' => $doc->issue_date ? $doc->issue_date->toDateString() : null,
+                ];
+            })
+            ->filter()
+            ->unique('number')
+            ->values()
+            ->all();
+
+        if ($fromPayments !== []) {
+            return array_values($fromPayments);
+        }
+
+        // Fallback: text pe linie / note (chitanțe vechi fără plăți legate).
+        $blob = trim(implode(' ', [
+            (string) $this->notes,
+            ...$this->items->map(fn ($i) => trim((string) $i->name.' '.(string) $i->description))->all(),
+        ]));
+        if ($blob === '') {
+            return [];
+        }
+
+        $found = [];
+        // „factura FCBM-FF-3564 din 01/09/2026” sau doar numărul
+        if (preg_match_all(
+            '/\b([A-Z0-9]{1,12}-[A-Z0-9]{1,12}-\d{3,6})\b(?:\s+din\s+(\d{1,2}\/\d{1,2}\/\d{4}))?/iu',
+            $blob,
+            $m,
+            PREG_SET_ORDER
+        )) {
+            foreach ($m as $row) {
+                $number = strtoupper($row[1]);
+                $date = null;
+                if (! empty($row[2])) {
+                    try {
+                        $date = \Illuminate\Support\Carbon::createFromFormat('d/m/Y', $row[2])->toDateString();
+                    } catch (\Throwable) {
+                        $date = null;
+                    }
+                }
+                $found[$number] = ['number' => $number, 'date' => $date];
+            }
+        }
+
+        return array_values($found);
+    }
+
+    /** @return list<string> */
+    public function receiptCollectedInvoiceNumbers(): array
+    {
+        return array_values(array_map(
+            fn (array $row) => $row['number'],
+            $this->receiptCollectedInvoices()
+        ));
+    }
+
     public function recurringInvoice(): BelongsTo
     {
         return $this->belongsTo(RecurringInvoice::class);
@@ -166,6 +311,166 @@ class Document extends Model
         $available = array_keys(config('document_languages', ['ro' => 'Română']));
 
         return in_array($lang, $available, true) ? $lang : 'ro';
+    }
+
+    public function currencyCode(): string
+    {
+        return strtoupper((string) ($this->currency ?: 'RON'));
+    }
+
+    public function exchangeRateToRon(): ?float
+    {
+        if (! $this->needsForeignExchangeRate()) {
+            return null;
+        }
+
+        $fx = (float) ($this->exchange_rate ?? 0);
+
+        return $fx > 1.0001 ? round($fx, 4) : null;
+    }
+
+    /** Curs pentru afișare (listă/PDF): salvat sau BNR/ECB la data emiterii. */
+    public function resolvedExchangeRateToRon(): ?float
+    {
+        if (! $this->needsForeignExchangeRate()) {
+            return null;
+        }
+
+        $stored = $this->exchangeRateToRon();
+        if ($stored !== null) {
+            return $stored;
+        }
+
+        try {
+            $rate = app(ExchangeRateService::class)->resolveForDocument(
+                $this->currencyCode(),
+                $this->issue_date?->toDateString() ?? now('Europe/Bucharest')->toDateString()
+            );
+
+            return $rate > 1.0001 ? round($rate, 4) : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    public function amountInRon(float $amount): ?float
+    {
+        $fx = $this->exchangeRateToRon();
+        if ($fx !== null) {
+            return round($amount * $fx, 2);
+        }
+
+        return $this->currencyCode() === 'RON' ? round($amount, 2) : null;
+    }
+
+    public function amountInRonForDisplay(float $amount): ?float
+    {
+        $fx = $this->resolvedExchangeRateToRon();
+        if ($fx === null) {
+            return null;
+        }
+
+        return round($amount * $fx, 2);
+    }
+
+    public function totalInRon(): ?float
+    {
+        return $this->amountInRon((float) $this->total);
+    }
+
+    public function totalInRonForDisplay(): ?float
+    {
+        return $this->amountInRonForDisplay((float) $this->total);
+    }
+
+    public function showsRonPrimaryTotal(): bool
+    {
+        return $this->resolvedExchangeRateToRon() !== null;
+    }
+
+    public function showsRonEquivalentInList(): bool
+    {
+        return $this->needsForeignExchangeRate() && $this->totalInRonForDisplay() !== null;
+    }
+
+    public function needsForeignExchangeRate(): bool
+    {
+        return $this->currencyCode() !== 'RON';
+    }
+
+    public function hasValidForeignExchangeRate(): bool
+    {
+        if (! $this->needsForeignExchangeRate()) {
+            return true;
+        }
+
+        return (float) ($this->exchange_rate ?? 0) > 1.0001;
+    }
+
+    public function foreignExchangeRateBlockMessage(): string
+    {
+        return 'Factura în '.$this->currencyCode().' nu are curs valutar valid. Completează cursul BNR înainte de trimitere (email / e-Factura).';
+    }
+
+    /**
+     * Completează cursul lipsă/greșit (≤ 1) din BNR/ECB la data emiterii.
+     */
+    public function ensureExchangeRate(): bool
+    {
+        if (! $this->needsForeignExchangeRate()) {
+            if ((float) ($this->exchange_rate ?? 0) !== 1.0) {
+                $this->forceFill(['exchange_rate' => 1])->save();
+            }
+
+            return true;
+        }
+
+        if ($this->hasValidForeignExchangeRate()) {
+            return true;
+        }
+
+        try {
+            $rate = app(ExchangeRateService::class)->resolveForDocument(
+                $this->currencyCode(),
+                $this->issue_date?->toDateString() ?? now('Europe/Bucharest')->toDateString(),
+                null
+            );
+            if ($rate > 1.0001) {
+                $this->forceFill(['exchange_rate' => round($rate, 4)])->save();
+
+                return true;
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('ensureExchangeRate failed', [
+                'document_id' => $this->id,
+                'currency' => $this->currencyCode(),
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return false;
+    }
+
+    public function clientIbanForPdf(): ?string
+    {
+        $iban = filled($this->client_iban ?? null)
+            ? (string) $this->client_iban
+            : (string) ($this->client?->iban ?? '');
+
+        $iban = trim($iban);
+
+        return $iban !== '' ? $iban : null;
+    }
+
+    public function clientBankNameForPdf(): ?string
+    {
+        $bank = filled($this->client_bank_name ?? null)
+            ? (string) $this->client_bank_name
+            : (string) ($this->client?->bank_name ?? '');
+
+        $bank = trim($bank);
+
+        return $bank !== '' ? $bank : null;
     }
 
     /** Termen de plată pentru formular (salvat sau dedus din scadență). */
@@ -259,10 +564,19 @@ class Document extends Model
 
     public function canSendEfactura(): bool
     {
-        // Retrimitere permisă oricând statusul ≠ ok (inclusiv nok / error / uploaded / queued).
+        // Nu permite retrimiterea cât timp e deja în SPV (uploaded/processing/ok) —
+        // altfel se creează dubluri acceptate în ANAF. Doar none / queued / nok / error.
         return in_array($this->type, ['invoice', 'credit_note'], true)
             && in_array($this->status, ['issued', 'storno'], true)
-            && ($this->efactura_status ?: 'none') !== 'ok';
+            && in_array($this->efactura_status ?: 'none', ['none', 'queued', 'nok', 'error'], true);
+    }
+
+    /** Deja încărcată în SPV — doar poll stare, nu upload nou. */
+    public function isEfacturaPendingInSpv(): bool
+    {
+        return in_array($this->type, ['invoice', 'credit_note'], true)
+            && in_array($this->efactura_status, ['uploaded', 'processing'], true)
+            && filled($this->efactura_upload_id);
     }
 
     /** Factură / storno / notă de credit — poate genera XML UBL pentru depunere manuală SPV. */
@@ -392,7 +706,28 @@ class Document extends Model
             return 0.0;
         }
 
+        if ($this->isProformaSettledByFiscalInvoice()) {
+            return 0.0;
+        }
+
         return max(0, (float) $this->total - (float) $this->paid_amount);
+    }
+
+    /**
+     * Proformă din care s-a emis deja factură fiscală (obligația trece pe factură; plata e pe factură).
+     */
+    public function isProformaSettledByFiscalInvoice(): bool
+    {
+        if ($this->type !== 'proforma') {
+            return false;
+        }
+
+        return Document::query()
+            ->where('company_id', $this->company_id)
+            ->where('related_document_id', $this->id)
+            ->where('type', 'invoice')
+            ->whereIn('status', ['issued', 'storno'])
+            ->exists();
     }
 
     /**
@@ -420,6 +755,15 @@ class Document extends Model
             $target = abs((float) $this->total);
             // Preferă suma plăților dacă acoperă totalul; altfel forțează abs(total).
             $this->paid_amount = $paid + 0.009 >= $target ? $paid : $target;
+            $this->payment_status = 'paid';
+            $this->save();
+
+            return;
+        }
+
+        // Proformă convertită în factură fiscală: plata e pe factură, proforma rămâne „încasată”.
+        if ($this->isProformaSettledByFiscalInvoice()) {
+            $this->paid_amount = (float) $this->total;
             $this->payment_status = 'paid';
             $this->save();
 

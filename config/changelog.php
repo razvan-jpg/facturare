@@ -7,6 +7,399 @@
  */
 return [
     [
+        'version' => '1.0.306',
+        'date' => '2026-09-13',
+        'title' => 'Proformă plătită cu card: rămâne încasată',
+        'changes' => [
+            'După plata cu cardul pe proformă, statusul rămâne «încasată» (plata e pe factura fiscală emisă automat).',
+            'Soldul restant de pe PDF nu mai include proforma sursă și e afișat corect în RON.',
+        ],
+    ],
+    [
+        'version' => '1.0.305',
+        'date' => '2026-09-13',
+        'title' => 'Plată card: clientul alege dintre toți procesatorii activi',
+        'changes' => [
+            'La plata cu cardul (factură / proformă / Beauty Manager) apar toți procesatorii activi: cei ai firmei și, la FLY DAVID, cei configurați în platformă (NETOPIA, Stripe, Mollie, Eu Plătesc).',
+            'Clientul alege procesatorul pe pagina de plată, înainte de checkout.',
+        ],
+    ],
+    [
+        'version' => '1.0.304',
+        'date' => '2026-09-12',
+        'title' => 'Plată card: încasarea se salvează chiar dacă factura întârzie',
+        'changes' => [
+            'După întoarcerea de la NETOPIA, încasarea pe proformă se înregistrează imediat, chiar dacă emiterea facturii fiscale (curs valutar / e-Factura) mai are nevoie de o clipă.',
+            'Ecranul de confirmare nu mai rămâne blocat pe „Verificăm plata”; pentru abonamente Beauty Manager duce înapoi la Abonament.',
+        ],
+    ],
+    [
+        'version' => '1.0.303',
+        'date' => '2026-09-12',
+        'title' => 'Abonamente Beauty Manager: încasare și factură la FLY DAVID',
+        'changes' => [
+            'API dedicat: FLY DAVID găsește clientul existent (CUI), emite proformă cu plată card, apoi factura fiscală după încasare.',
+            'Produsele de abonament Beauty Manager (salon / client, 1–12 luni) se creează automat în nomenclator, separat de abonamentul DateConta Facturare.',
+        ],
+    ],
+    [
+        'version' => '1.0.302',
+        'date' => '2026-09-12',
+        'title' => 'e-Factura neplătitor: CUI vânzător corect în XML',
+        'changes' => [
+            'La firmele neplătitoare de TVA, XML-ul pune CUI-ul numeric în PartyLegalEntity (nu Reg. Com.), fără identificator TVA pe cumpărător (BR-O-02) și fără motive de scutire pe liniile facturii.',
+            'Corectează respingerile ANAF de tip „CUI emitent… nu corespunde cu cel identificat în factură=0”.',
+        ],
+    ],
+    [
+        'version' => '1.0.301',
+        'date' => '2026-09-09',
+        'title' => 'Sold restant pe factură fără documentul curent',
+        'changes' => [
+            'Pe PDF, „Sold restant” arată soldul anterior emiterii (data facturii − 1 zi), fără a include factura/proforma curentă.',
+        ],
+    ],
+    [
+        'version' => '1.0.300',
+        'date' => '2026-09-09',
+        'title' => 'Sold restant pe factură: ON/OFF pe client + în masă',
+        'changes' => [
+            'Pe fișa clientului (și la editare) există comutator Sold restant pe factură, lângă cel de penalități.',
+            'În Setări → Preferințe generale: selectoare pentru penalități și sold restant (implicite clienți noi) + bifă „Aplică la toți clienții existenți”.',
+        ],
+    ],
+    [
+        'version' => '1.0.299',
+        'date' => '2026-09-09',
+        'title' => 'Emitere fără auto-ciornă și fără blocare număr',
+        'changes' => [
+            'Deschiderea formularului Emite factură nu mai creează automat ciornă în listă.',
+            'Numărul din serie nu se mai rezervă la deschiderea formularului; se alocă la Salvează și emite / Emite.',
+            'Dacă închizi formularul fără salvare, nu mai apar ciorne în plus și nu mai rămân goluri artificiale în numerotare.',
+        ],
+    ],
+    [
+        'version' => '1.0.298',
+        'date' => '2026-09-09',
+        'title' => 'e-Factura: fără dubluri în SPV',
+        'changes' => [
+            'Nu se mai poate retrimite o factură cât timp e în SPV (Încărcată / În prelucrare) — se actualizează doar starea ANAF.',
+            'Protecție la dublu-click: o singură trimitere simultană pe factură.',
+        ],
+    ],
+    [
+        'version' => '1.0.297',
+        'date' => '2026-09-09',
+        'title' => 'e-Factura: XML corect pentru neplătitori TVA',
+        'changes' => [
+            'La firmele neplătitoare de TVA, XML-ul e-Factura nu mai pune prefixul RO pe CUI și nu mai declară PartyTaxScheme TVA.',
+            'Categoriile fiscale pentru neplătitori: O + VATEX-EU-O (în loc de Z).',
+        ],
+    ],
+    [
+        'version' => '1.0.296',
+        'date' => '2026-09-09',
+        'title' => 'Descarcă XML pe factură și în listă',
+        'changes' => [
+            'Pe fișa facturii, lângă PDF, există butonul XML (UBL e-Factura).',
+            'În lista de facturi (și storno / note de creditare), fiecare document emis are buton XML pe rând.',
+        ],
+    ],
+    [
+        'version' => '1.0.295',
+        'date' => '2026-09-06',
+        'title' => 'Landing: iOS live + Android în curând',
+        'changes' => [
+            'Secțiunea de pe pagina de start e din nou „Aplicația iOS este live”, cu buton și link către App Store (https://apps.apple.com/ro/app/facturare/id6801541847).',
+            'Anunț: în curând va exista și o aplicație similară în Google Play Store pentru Android.',
+        ],
+    ],
+    [
+        'version' => '1.0.294',
+        'date' => '2026-09-06',
+        'title' => 'Landing: utilizatori nelimitați',
+        'changes' => [
+            'Pe banda Comunitate de pe pagina de start rulează și mesajul: poți crea oricâți utilizatori suplimentari fără niciun cost suplimentar.',
+        ],
+    ],
+    [
+        'version' => '1.0.293',
+        'date' => '2026-09-04',
+        'title' => 'Dashboard pe 4 coloane + sesiune lungă',
+        'changes' => [
+            'Pe desktop, panoul are mereu 4 coloane de tile-uri, iar meniul arată textul (nu doar iconițe) — fără să mai fie nevoie să mărești fereastra Safari.',
+            'Sesiunea rămâne activă până la 30 de zile de inactivitate; bifa „Ține-mă minte” e bifată implicit și păstrează autentificarea până la 1 an.',
+        ],
+    ],
+    [
+        'version' => '1.0.292',
+        'date' => '2026-09-04',
+        'title' => 'Totaluri în echivalent lei',
+        'changes' => [
+            'Pe dashboard, rapoarte și grafice, vânzările și încasările în valută se convertesc în lei (cursul de pe factură) — nu se mai adună EUR cu RON ca și cum ar fi aceeași monedă.',
+            'Valuta (EUR etc.) rămâne pe documentul PDF / factura emisă; în restul aplicației totalurile apar în echivalent lei.',
+        ],
+    ],
+    [
+        'version' => '1.0.291',
+        'date' => '2026-09-04',
+        'title' => 'Emitere fără TVA la neplătitori',
+        'changes' => [
+            'Dacă societatea e neplătitoare de TVA, pe formularul de emitere (și abonamente) nu mai apare coloana TVA — doar produs, cantitate, preț și total.',
+            'Când treci societatea pe plătitor de TVA (Setări → Cote TVA), selectorul de cote revine pe formular.',
+        ],
+    ],
+    [
+        'version' => '1.0.290',
+        'date' => '2026-09-04',
+        'title' => 'TVA pe linie: preț cu TVA inclus',
+        'changes' => [
+            'La emitere (și pe abonamente) poți alege „inclus 21%”, „inclus 11%” sau „inclus 5%”: introduci prețul cu TVA, iar aplicația calculează baza, TVA-ul și totalul la suma pe care ai dat-o.',
+            'Cotele clasice 21% / 11% / 5% / 0% rămân pentru preț fără TVA.',
+        ],
+    ],
+    [
+        'version' => '1.0.289',
+        'date' => '2026-09-04',
+        'title' => 'Temă Crăciun programată',
+        'changes' => [
+            'Tema de iarnă (brad, fulgi, accente festive) pe landing și în aplicație: activă automat din 30.11.2026 ora 10:00 până pe 31.01.2027 ora 24:00 (Europe/Bucharest).',
+            'Până la activare, preview: /?preview_winter=1',
+        ],
+    ],
+    [
+        'version' => '1.0.288',
+        'date' => '2026-09-04',
+        'title' => 'Landing: Recomandă pe bara Comunitate',
+        'changes' => [
+            'Din 1 octombrie 2026: sticky-ul „Recomandă & câștigă” dispare; mesajul trece pe bara Comunitate, separat cu *** … ***.',
+            'Până la data de activare, preview: /?preview_referral_bar=1',
+        ],
+    ],
+    [
+        'version' => '1.0.287',
+        'date' => '2026-09-04',
+        'title' => 'Dashboard: încasări pe metode',
+        'changes' => [
+            'Tile-ul de pe dashboard arată totalul încasat azi și luna asta, defalcat pe cash, card și OP.',
+        ],
+    ],
+    [
+        'version' => '1.0.286',
+        'date' => '2026-09-04',
+        'title' => 'Chitanță: data facturilor încasate',
+        'changes' => [
+            'Pe PDF-ul chitanței, explicația include și data facturilor încasate (ex.: FCBM-FF-3564 din 01/09/2026).',
+        ],
+    ],
+    [
+        'version' => '1.0.285',
+        'date' => '2026-09-04',
+        'title' => 'Chitanță PDF unică pentru toți',
+        'changes' => [
+            'Toate chitanțele folosesc același format A5 peisaj (text sumă în cifre/litere + facturi încasate); macheta facturii nu se aplică pe chitanță.',
+            'Logo-ul și ștampila se micșorează automat pe chitanță; din Personalizare se aplică pe chitanță doar culoarea.',
+        ],
+    ],
+    [
+        'version' => '1.0.284',
+        'date' => '2026-09-04',
+        'title' => 'Chitanță PDF: text clasic',
+        'changes' => [
+            'PDF chitanță: text «Suma … (în litere), reprezentând încasare factura/facturile …» în loc de tabel cu cantitate/TVA.',
+            'Eliminat totalurile din dreapta jos pe PDF-ul chitanței; rămân antetul, părțile și ștampila.',
+        ],
+    ],
+    [
+        'version' => '1.0.283',
+        'date' => '2026-09-04',
+        'title' => 'Chitanțe PDF A5 peisaj',
+        'changes' => [
+            'PDF-ul chitanțelor e pe format A5 peisaj (mai compact la tipărire); facturile, proformele și avizele rămân A4 portret.',
+            'Manualul Ajutor (Alte documente, Încasări, Personalizare PDF) actualizat cu formatul chitanței.',
+        ],
+    ],
+    [
+        'version' => '1.0.282',
+        'date' => '2026-09-03',
+        'title' => 'e-Factura: avertizări 11:55 + raport',
+        'changes' => [
+            'Mailurile de avertizare/urgent e-Factura se trimit la 11:55 doar către owner-ul firmei, cu CC la adresele raportului zilnic — nu către clienții de pe factură.',
+            'Raportul zilnic listează facturile netrimise/neacceptate din momentul emiterii (inclusiv 0–2 zile) și corectează eticheta „Netrimise”.',
+        ],
+    ],
+    [
+        'version' => '1.0.281',
+        'date' => '2026-09-03',
+        'title' => 'Avertizări e-Factura pe email',
+        'changes' => [
+            'Zilele 3–5: email de avertizare pentru facturi emise netrimise sau neacceptate în e-Factura.',
+            'Din ziua 6 până la Acceptată ANAF: email urgent — facturi ieșite din perioada de grație (5 zile); trimiteți imediat sau anulați.',
+            'Manual e-Factura actualizat cu regula de notificări.',
+        ],
+    ],
+    [
+        'version' => '1.0.280',
+        'date' => '2026-09-01',
+        'title' => 'Solduri și rapoarte în echivalent RON',
+        'changes' => [
+            'Solduri clienți, sume de încasat, dashboard și fișă partener: facturile în EUR/USD se convertesc în RON (curs document / BNR) înainte de totalizare.',
+            'Nu se mai adună direct sume în monede diferite — totalul este mereu în lei.',
+        ],
+    ],
+    [
+        'version' => '1.0.279',
+        'date' => '2026-09-01',
+        'title' => 'Raport solduri: totaluri pe monedă',
+        'changes' => [
+            'Solduri clienți (raport + listă): totalurile și soldurile se afișează separat pe RON/EUR etc., fără adunare cross-valută.',
+            'Dashboard — widget Solduri clienți: aceeași logică pe monedă.',
+        ],
+    ],
+    [
+        'version' => '1.0.278',
+        'date' => '2026-09-01',
+        'title' => 'Listă facturi: fix echivalent RON',
+        'changes' => [
+            'Coloana Total afișează corect echivalentul în RON sub sumele în EUR (cursul era omis din query-ul listei).',
+        ],
+    ],
+    [
+        'version' => '1.0.277',
+        'date' => '2026-09-01',
+        'title' => 'Listă facturi: echivalent RON vizibil',
+        'changes' => [
+            'Lista de facturi calculează echivalentul RON și când cursul salvat lipsește sau e greșit (BNR/ECB la data emiterii).',
+        ],
+    ],
+    [
+        'version' => '1.0.276',
+        'date' => '2026-09-01',
+        'title' => 'Curs valutar obligatoriu (email + e-Factura)',
+        'changes' => [
+            'Facturile în valută primesc curs automat la salvare/emitere (BNR/ECB); fără curs valid nu se trimit pe email și nu intră în e-Factura.',
+            'Manual Emitere factură + e-Factura actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.275',
+        'date' => '2026-09-01',
+        'title' => 'Facturi în valută: total RON pe PDF și listă',
+        'changes' => [
+            'Pe PDF, totalul evidențiat este în RON, cu echivalentul în moneda facturii (EUR etc.) dedesubt.',
+            'Lista de facturi arată sub totalul în valută echivalentul în RON.',
+            'Manual Emitere factură + Liste documente actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.274',
+        'date' => '2026-09-01',
+        'title' => 'Retrimitere email: client + CC',
+        'changes' => [
+            'Retrimiterea manuală (fișă sau listă) include din nou adresele CC de pe document și CC platformă recurentă, ca la trimiterea inițială.',
+        ],
+    ],
+    [
+        'version' => '1.0.273',
+        'date' => '2026-09-01',
+        'title' => 'PDF factură: sold restant client la emitere',
+        'changes' => [
+            'Pe PDF, sub mențiuni: Sold restant la data emiterii facturii (sold cumulat client); dacă e zero: „Sold restant = 0. Mulțumim.”',
+            'Manual Emitere factură actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.272',
+        'date' => '2026-09-01',
+        'title' => 'PDF factură: sold restant vizibil',
+        'changes' => [
+            'Corectată afișarea Sold restant în totalurile PDF (facturi/proforme emise).',
+            'Etichetă în română aliniată la listele din aplicație.',
+        ],
+    ],
+    [
+        'version' => '1.0.271',
+        'date' => '2026-09-01',
+        'title' => 'PDF factură: rest de plată',
+        'changes' => [
+            'Pe PDF-ul facturii/proformei emise apare Rest de plată (și Achitat, dacă e cazul); suma evidențiată în antet reflectă restul de încasat.',
+            'Manual Emitere factură actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.270',
+        'date' => '2026-09-01',
+        'title' => 'Rest de încasat pe liste (facturi + clienți)',
+        'changes' => [
+            'Lista de documente afișează coloanele Achitat și Rest (sold restant pe factură).',
+            'Lista de clienți are coloană separată Rest facturi, pe lângă Sold total.',
+            'Manual Liste documente + Clienți actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.269',
+        'date' => '2026-09-01',
+        'title' => 'Listă documente: previzualizare PDF',
+        'changes' => [
+            'Pe lista de facturi (și celelalte documente) buton Vizualizează — deschide PDF-ul în fereastră, fără descărcare obligatorie.',
+            'Manual Liste documente actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.268',
+        'date' => '2026-09-01',
+        'title' => 'Curs valutar BNR la emitere (recurente + corecție)',
+        'changes' => [
+            'Facturile/proformele în EUR/USD/GBP primesc automat curs BNR la data emiterii (inclusiv din abonamente recurente).',
+            'Corectat cazul în care cursul rămânea 1 RON / unitate valută.',
+        ],
+    ],
+    [
+        'version' => '1.0.267',
+        'date' => '2026-09-01',
+        'title' => 'Liste: Pe pagină 50, 100 și Toate',
+        'changes' => [
+            'Selectorul Pe pagină (25 / 50 / 100 / Toate) se aplică acum la facturi recurente, documente, produse și încasări, nu doar la clienți.',
+            'Manualul Ajutor actualizat (liste, recurente, clienți, produse, încasări, preferințe).',
+        ],
+    ],
+    [
+        'version' => '1.0.266',
+        'date' => '2026-08-30',
+        'title' => 'Dashboard: tile-uri de aceeași înălțime',
+        'changes' => [
+            'Toate tile-urile au aceeași înălțime; listele lungi se derulează în interior.',
+        ],
+    ],
+    [
+        'version' => '1.0.265',
+        'date' => '2026-08-30',
+        'title' => 'Dashboard: tile-uri la dimensiunea inițială, cu scroll',
+        'changes' => [
+            'Tile-urile rămân la înălțimea obișnuită; listele lungi se derulează în interior, nu întind cardul.',
+            'Manual Dashboard actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.264',
+        'date' => '2026-08-30',
+        'title' => 'Dashboard: câte rânduri afișezi în tile-uri',
+        'changes' => [
+            'În Configurări, la tile-urile cu listă (Facturi neîncasate, Sold clienți, Top clienți/produse, Penalități, Activități) alegi 5, 10, 15 sau toți.',
+            'Facturi neîncasate umple tot spațiul tile-ului; lista e derulabilă.',
+            'Manual Dashboard actualizat.',
+        ],
+    ],
+    [
+        'version' => '1.0.263',
+        'date' => '2026-08-30',
+        'title' => 'Dashboard: toate facturile neîncasate și toți clienții cu sold',
+        'changes' => [
+            'Tile-urile Facturi neîncasate și Sold clienți afișează toate înregistrările, nu doar primele 5–8; listele rămân derulabile.',
+            'Manual Dashboard actualizat.',
+        ],
+    ],
+    [
         'version' => '1.0.262',
         'date' => '2026-08-30',
         'title' => 'Penalități detaliate pe fișa clientului',

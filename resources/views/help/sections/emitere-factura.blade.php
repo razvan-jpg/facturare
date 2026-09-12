@@ -75,9 +75,9 @@
 <h3>3. Serie și număr</h3>
 <ol class="help-steps">
     <li>Selectează seria de factură (prefixul tău, ex. FCT).</li>
-    <li>La deschiderea formularului se <strong>rezervă</strong> automat cel mai mic număr liber — inclusiv golurile rămase libere (ex. FCT-0003 dacă 0001–0002 sunt emise și 0003 a fost eliberat).</li>
-    <li>Poți alege din listă un alt număr liber („liber (gol)” sau „următorul”). Rezervarea ține cont de alte sesiuni (web sau app).</li>
-    <li>La emitere se folosește numărul rezervat; la renunțare (ciornă goală) sau după ~60 min fără activitate, numărul revine în lista de libere.</li>
+    <li>La deschiderea formularului vezi doar <strong>previzualizarea</strong> următorului număr — fără rezervare automată și fără ciornă salvată automat.</li>
+    <li>Numărul se alocă efectiv abia la <strong>Salvează și emite</strong> (sau acțiunea Emite din ciornă).</li>
+    <li>Astfel, simpla deschidere/închidere a formularului nu mai blochează numere în serie.</li>
 </ol>
 
 <div class="help-warn">
@@ -88,12 +88,13 @@
 <h3>4. Monedă și curs valutar</h3>
 <ul>
     <li>Alege moneda facturii: RON, EUR, USD, GBP (sau cele disponibile în formular).</li>
-    <li>Dacă moneda ≠ RON, completează <strong>Curs valutar (RON)</strong>. Poți folosi sugestia de curs (ex. BNR) și o poți edita.</li>
+    <li>Dacă moneda ≠ RON, câmpul <strong>Curs valutar (RON)</strong> se precompletează automat (BNR / ECB). Fără curs valid, factura <strong>nu se trimite pe email</strong> și <strong>nu intră în e-Factura</strong>.</li>
     <li>Cursul este obligatoriu pentru monede străine; fără el nu poți finaliza corect documentul.</li>
 </ul>
 
 <div class="help-note">
-    Totalurile pe PDF apar în moneda facturii; cursul asigură echivalentul în RON unde este necesar în evidență / e-Factura.
+    Totalurile pe PDF: liniile Subtotal/TVA rămân în moneda facturii; <strong>Totalul evidențiat</strong> (subsolar + antet) este în <strong>RON</strong>, cu echivalentul în moneda facturii dedesubt. Lista de facturi arată sub totalul în valută și echivalentul în RON.
+    La <strong>facturi recurente</strong> în valută, cursul BNR de la data emiterii se completează automat (poți modifica manual pe document dacă e nevoie).
 </div>
 
 <h3>5. Limba documentului (PDF)</h3>
@@ -113,7 +114,7 @@
 <ol class="help-steps">
     <li>Adaugă o linie nouă.</li>
     <li>În câmpul <strong>Produs</strong>, tastează și alege din autocomplete (sau introduci un nume nou).</li>
-    <li>Completează cantitatea (≠ 0) și prețul unitar (tastare liberă). Pentru <strong>cota TVA</strong> alegi din listă una dintre cele 4 cote: <strong>21%</strong>, <strong>11%</strong>, <strong>5%</strong> sau <strong>0%</strong>.</li>
+    <li>Completează cantitatea (≠ 0) și prețul unitar (tastare liberă). Dacă societatea e <strong>plătitoare de TVA</strong>, pentru <strong>cota TVA</strong> alegi din listă: <strong>21%</strong>, <strong>11%</strong>, <strong>5%</strong>, <strong>0%</strong> (preț fără TVA) sau <strong>inclus 21%</strong> / <strong>inclus 11%</strong> / <strong>inclus 5%</strong> — când prețul pe care îl introduci are deja TVA-ul în el; aplicația calculează baza și TVA-ul astfel încât totalul liniei să rămână prețul tău. La <strong>neplătitor de TVA</strong>, coloana TVA nu apare pe formular (cotele revin când treci societatea pe plătitor, în Setări → Cote TVA).</li>
     <li><strong>Unitatea de măsură (UM)</strong> — listă live (buc, kg, m³…). Poți scrie o UM nouă (ex. palet); se adaugă în catalogul firmei. La XML e-Factura se folosește corespondența UNECE (H87, KGM…).</li>
     <li>Opțional: completează <strong>Descrierea</strong> liniei pentru detalii suplimentare.</li>
     <li>Repetă pentru fiecare poziție. Șterge liniile goale.</li>
@@ -158,8 +159,11 @@
 <h3>După emitere: PDF și email</h3>
 <ul>
     <li>Descarcă sau deschide PDF-ul A4 (machetă, logo, semnătură conform Personalizare PDF).</li>
+    <li>Pe facturile/proformele emise, sub mențiuni (ex. avertizare penalități) poate apărea <strong>Sold restant</strong> — dacă pe client e ON „Sold restant pe factură”. Suma e soldul <strong>anterior facturii curente</strong> (la data emiterii − 1 zi), în <strong>RON</strong>, fără totalul documentului de pe PDF și fără proforma din care a fost emisă factura. Dacă e zero: <strong>Sold restant = 0. Mulțumim.</strong></li>
+    <li>La încasări parțiale, în totaluri apare <strong>Achitat</strong> și <strong>Rest de plată</strong> pe documentul curent.</li>
     <li>În subsolul PDF, textul „Document generat cu DateConta Facturare” este un link către pagina principală a aplicației.</li>
     <li>Trimite pe email clientului dacă ai adresa completată. Textul și serverul SMTP se configurează la Setări → Email.</li>
+    <li>La retrimitere (fișă document sau listă → <strong>Retrimite email</strong>), se folosesc aceleași destinatari ca la emitere: client + adresa CC bifată pe document (+ CC platformă pentru facturi recurente).</li>
     <li>Verifică vizual IBAN-urile, CUI-ul și totalurile înainte de a trimite clientului.</li>
 </ul>
 

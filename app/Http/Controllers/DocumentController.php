@@ -14,6 +14,7 @@ use App\Services\ExchangeRateService;
 use App\Services\InvoicePdfService;
 use App\Services\ReliableMail;
 use App\Support\DocumentFooterFields;
+use App\Support\ListPerPage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use ZipArchive;
 use Illuminate\Http\JsonResponse;
@@ -55,28 +56,31 @@ class DocumentController extends Controller
             }
         }
 
-        $documents = $company->documents()
-            ->select([
-                'id', 'company_id', 'type', 'status', 'number_full', 'issue_date', 'due_date',
-                'client_name', 'total', 'paid_amount', 'currency', 'payment_status',
-                'efactura_status', 'efactura_upload_id', 'efactura_download_id', 'efactura_error',
-                'related_document_id', 'created_at', 'updated_at',
-            ])
-            ->withCount([
-                'relatedDocuments as storno_count' => fn ($q) => $q->where('status', 'storno'),
-                'relatedDocuments as credit_note_count' => fn ($q) => $q->where('type', 'credit_note'),
-            ])
-            ->when($type === 'storno', fn ($q) => $q->where('type', 'invoice')->where('status', 'storno'))
-            ->when($type === 'credit_note', fn ($q) => $q->where('type', 'credit_note'))
-            ->when($type === 'invoice', fn ($q) => $q->where('type', 'invoice')->where('status', '!=', 'storno'))
-            ->when(in_array($type, ['proforma', 'delivery', 'receipt'], true), fn ($q) => $q->where('type', $type))
-            // Cele mai noi sus: data/ora salvării, apoi data documentului, număr, id.
-            ->orderByDesc('updated_at')
-            ->orderByDesc('issue_date')
-            ->orderByDesc('number')
-            ->orderByDesc('id')
-            ->paginate($company->documentsPerPage())
-            ->withQueryString();
+        $perPage = ListPerPage::resolve($request, $company);
+        $documents = ListPerPage::paginate(
+            $company->documents()
+                ->select([
+                    'id', 'company_id', 'type', 'status', 'number_full', 'issue_date', 'due_date',
+                    'client_name', 'total', 'paid_amount', 'currency', 'exchange_rate', 'payment_status',
+                    'efactura_status', 'efactura_upload_id', 'efactura_download_id', 'efactura_error',
+                    'related_document_id', 'created_at', 'updated_at',
+                ])
+                ->withCount([
+                    'relatedDocuments as storno_count' => fn ($q) => $q->where('status', 'storno'),
+                    'relatedDocuments as credit_note_count' => fn ($q) => $q->where('type', 'credit_note'),
+                ])
+                ->when($type === 'storno', fn ($q) => $q->where('type', 'invoice')->where('status', 'storno'))
+                ->when($type === 'credit_note', fn ($q) => $q->where('type', 'credit_note'))
+                ->when($type === 'invoice', fn ($q) => $q->where('type', 'invoice')->where('status', '!=', 'storno'))
+                ->when(in_array($type, ['proforma', 'delivery', 'receipt'], true), fn ($q) => $q->where('type', $type))
+                // Cele mai noi sus: data/ora salvării, apoi data documentului, număr, id.
+                ->orderByDesc('updated_at')
+                ->orderByDesc('issue_date')
+                ->orderByDesc('number')
+                ->orderByDesc('id'),
+            $perPage,
+            $request
+        );
 
         $seriesType = match ($type) {
             'storno' => 'invoice',
@@ -107,7 +111,8 @@ class DocumentController extends Controller
             'company',
             'type',
             'hasActiveSeries',
-            'hasEfacturaOverdue'
+            'hasEfacturaOverdue',
+            'perPage'
         ));
     }
 
@@ -148,37 +153,15 @@ class DocumentController extends Controller
             return redirect()->route('documents.index', ['type' => $type]);
         }
 
-        // Ciornă + rezervare număr imediat la deschiderea formularului (evită duplicate pe multi-sesiune).
-        $year = (int) now()->format('Y');
-        $defaultSeries = $seriesList->firstWhere('year', $year)?->prefix
-            ?? $seriesList->firstWhere('is_default', true)?->prefix
-            ?? $seriesList->first()?->prefix;
-
-        $document = Document::create([
-            'company_id' => $company->id,
-            'created_by' => $request->user()->id,
+        return view('documents.create', [
+            'company' => $company,
             'type' => $type,
-            'status' => 'draft',
-            'issue_date' => now()->toDateString(),
-            'issue_year' => $year,
-            'currency' => 'RON',
-            'exchange_rate' => 1,
-            'series' => $defaultSeries,
-            'document_language' => ($company->document_languages ?: ['ro'])[0] ?? 'ro',
-            'prepared_by' => $company->seriesResponsibleName(),
+            'clients' => $company->clients()->orderBy('name')->get(),
+            'products' => $company->products()->where('active', true)->orderBy('name')->get(),
+            'seriesList' => $seriesList,
+            'currencies' => config('currencies'),
+            'paymentTerms' => config('payment_terms'),
         ]);
-
-        try {
-            $documents->reserveNumber($document, $defaultSeries);
-        } catch (\Throwable $e) {
-            $document->delete();
-
-            return redirect()
-                ->route('documents.index', ['type' => $type])
-                ->withErrors(['series' => $e->getMessage()]);
-        }
-
-        return redirect()->route('documents.edit', $document);
     }
 
     public function fxRate(Request $request, ExchangeRateService $fx): JsonResponse
@@ -221,7 +204,7 @@ class DocumentController extends Controller
             'items.*.unit' => ['nullable', 'string', 'max:20'],
             'items.*.quantity' => ['nullable', 'numeric', 'decimal:0,2'],
             'items.*.unit_price' => ['nullable', 'numeric', 'min:0', 'decimal:0,2'],
-            'items.*.vat_rate' => ['nullable', 'numeric', 'min:0', 'max:100', 'decimal:0,2'],
+            'items.*.vat_rate' => ['nullable', \App\Support\LineVat::validationRule()],
             'items.*.product_id' => ['nullable', 'integer'],
             'items.*.details' => ['nullable', 'array'],
             'items.*.details.*' => ['nullable', 'string', 'max:2000'],
@@ -231,10 +214,14 @@ class DocumentController extends Controller
 
         if (($data['currency'] ?? 'RON') === 'RON') {
             $data['exchange_rate'] = 1;
-        } elseif (empty($data['exchange_rate'])) {
-            return back()->withInput()->withErrors(['exchange_rate' => 'Completează cursul valutar.']);
         } else {
-            $data['exchange_rate'] = round((float) $data['exchange_rate'], 4);
+            try {
+                $data['exchange_rate'] = $this->resolveFormExchangeRate($data);
+            } catch (\Throwable $e) {
+                return back()->withInput()->withErrors([
+                    'exchange_rate' => 'Nu am putut prelua cursul valutar: '.$e->getMessage(),
+                ]);
+            }
         }
 
         $data = DocumentFooterFields::fromRequest($request, $data, $company);
@@ -250,7 +237,14 @@ class DocumentController extends Controller
         $document = $service->createDraft($company, $request->user(), $data['type'], $data, $data['items']);
 
         if (($data['action'] ?? 'draft') === 'issue') {
-            $service->issueAndMaybeSendEfactura($document);
+            try {
+                $service->issueAndMaybeSendEfactura($document);
+            } catch (Throwable $e) {
+                return redirect()
+                    ->route('documents.edit', $document)
+                    ->withInput()
+                    ->withErrors(['series' => $e->getMessage()]);
+            }
         }
 
         return $this->redirectAfterSave($document, $company, 'Document salvat.');
@@ -273,6 +267,16 @@ class DocumentController extends Controller
             } catch (\Throwable) {
                 // keep current status if ANAF is unreachable
             }
+        }
+
+        // Proforme convertite: plata e pe factură — repară statusul dacă a rămas greșit „neîncasată”.
+        if (
+            $document->type === 'proforma'
+            && $document->payment_status !== 'paid'
+            && $document->isProformaSettledByFiscalInvoice()
+        ) {
+            $document->refreshPaymentStatus();
+            $document->refresh();
         }
 
         return view('documents.show', compact('document'));
@@ -371,17 +375,25 @@ class DocumentController extends Controller
         $errors = [];
 
         foreach ($documents as $document) {
-            $recipients = dc_parse_emails($document->client_email ?: $document->client?->email);
+            $targets = $document->emailManualResendTargets();
+            $recipients = $targets['to'];
+            $cc = $targets['cc'];
             if ($recipients === []) {
                 $errors[] = ($document->number_full ?: '#'.$document->id).': clientul nu are email.';
                 continue;
             }
 
+            if (! $document->ensureExchangeRate()) {
+                $errors[] = ($document->number_full ?: '#'.$document->id).': '.$document->foreignExchangeRateBlockMessage();
+                continue;
+            }
+
             try {
                 $mail->send(
-                    new DocumentSentMail($document, $invoicePdf->output($document)),
+                    new DocumentSentMail($document, $invoicePdf->output($document->fresh(['items', 'client', 'company']))),
                     $recipients,
-                    $document->company
+                    $document->company,
+                    $cc !== [] ? $cc : null
                 );
                 $ok++;
             } catch (Throwable $e) {
@@ -411,10 +423,10 @@ class DocumentController extends Controller
      */
     public function exportEfacturaXml(Request $request, CompanyContext $context, EfacturaUblBuilder $ubl): JsonResponse|StreamedResponse|\Illuminate\Http\Response
     {
-        $this->authorizeCompanyAbility($context->current(), 'efactura_view');
-
         $company = $context->current();
         abort_unless($company, 403);
+        // La fel ca PDF: oricine vede documentele poate descărca XML UBL.
+        $this->authorizeCompanyAbility($company, 'documents_view');
 
         $data = $request->validate([
             'document_ids' => ['required', 'array', 'min:1'],
@@ -539,23 +551,15 @@ class DocumentController extends Controller
         }
     }
 
-    public function edit(Document $document, CompanyContext $context, DocumentService $service): View
+    public function edit(Document $document, CompanyContext $context): View|RedirectResponse
     {
         $this->authorizeDocument($document, $context, 'documents_manage');
-        abort_unless($document->canEdit(), 403, 'Documentul nu poate fi editat (posibil trimis în e-Factura).');
-        $company = $context->current();
-
-        if ($document->status === 'draft') {
-            try {
-                if ($document->hasNumberReservation()) {
-                    $document = $service->touchReservation($document);
-                } else {
-                    $document = $service->reserveNumber($document);
-                }
-            } catch (\Throwable $e) {
-                // Formularul se deschide; utilizatorul poate configura seriile.
-            }
+        if (! $document->canEdit()) {
+            return redirect()
+                ->route('documents.show', $document)
+                ->with('status', 'Documentul nu poate fi editat (posibil trimis în e-Factura).');
         }
+        $company = $context->current();
 
         $document->load('items');
 
@@ -668,7 +672,7 @@ class DocumentController extends Controller
             'items.*.unit' => ['nullable', 'string', 'max:20'],
             'items.*.quantity' => ['nullable', 'numeric', 'decimal:0,2'],
             'items.*.unit_price' => ['nullable', 'numeric', 'min:0', 'decimal:0,2'],
-            'items.*.vat_rate' => ['nullable', 'numeric', 'min:0', 'max:100', 'decimal:0,2'],
+            'items.*.vat_rate' => ['nullable', \App\Support\LineVat::validationRule()],
             'items.*.product_id' => ['nullable', 'integer'],
             'items.*.details' => ['nullable', 'array'],
             'items.*.details.*' => ['nullable', 'string', 'max:2000'],
@@ -678,10 +682,14 @@ class DocumentController extends Controller
 
         if (($data['currency'] ?? 'RON') === 'RON') {
             $data['exchange_rate'] = 1;
-        } elseif (empty($data['exchange_rate'])) {
-            return back()->withInput()->withErrors(['exchange_rate' => 'Completează cursul valutar.']);
         } else {
-            $data['exchange_rate'] = round((float) $data['exchange_rate'], 4);
+            try {
+                $data['exchange_rate'] = $this->resolveFormExchangeRate($data);
+            } catch (\Throwable $e) {
+                return back()->withInput()->withErrors([
+                    'exchange_rate' => 'Nu am putut prelua cursul valutar: '.$e->getMessage(),
+                ]);
+            }
         }
 
         $company = $context->current();
@@ -716,16 +724,12 @@ class DocumentController extends Controller
             }
         }
 
-        if ($document->status === 'draft') {
+        if ($document->status === 'draft' && ($data['action'] ?? 'draft') === 'issue') {
             try {
-                $service->reserveNumber($document->fresh(), $data['series'] ?? null);
-            } catch (\Throwable $e) {
+                $service->issueAndMaybeSendEfactura($document->fresh());
+            } catch (Throwable $e) {
                 return back()->withInput()->withErrors(['series' => $e->getMessage()]);
             }
-        }
-
-        if ($document->status === 'draft' && ($data['action'] ?? 'draft') === 'issue') {
-            $service->issueAndMaybeSendEfactura($document->fresh());
         }
 
         return $this->redirectAfterSave($document->fresh(), $company, 'Document actualizat.');
@@ -734,7 +738,11 @@ class DocumentController extends Controller
     public function issue(Document $document, CompanyContext $context, DocumentService $service): RedirectResponse
     {
         $this->authorizeDocument($document, $context, 'documents_manage');
-        $service->issueAndMaybeSendEfactura($document);
+        try {
+            $service->issueAndMaybeSendEfactura($document);
+        } catch (Throwable $e) {
+            return back()->withErrors(['series' => $e->getMessage()]);
+        }
         $document = $document->fresh();
 
         return $this->redirectAfterSave(
@@ -866,6 +874,21 @@ class DocumentController extends Controller
             ]);
     }
 
+    public function pdfPreview(Document $document, CompanyContext $context, InvoicePdfService $invoicePdf)
+    {
+        $this->authorizeDocument($document, $context);
+
+        return $invoicePdf->make($document)
+            ->stream($document->pdfFileName())
+            ->withHeaders([
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$document->pdfFileName().'"',
+                'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ]);
+    }
+
     public function pdfSigned(Document $document, InvoicePdfService $invoicePdf)
     {
         return $invoicePdf->make($document)
@@ -881,17 +904,26 @@ class DocumentController extends Controller
     {
         $this->authorizeDocument($document, $context, 'documents_manage');
 
-        $recipients = dc_parse_emails($document->client_email ?: $document->client?->email);
+        $targets = $document->emailManualResendTargets();
+        $recipients = $targets['to'];
+        $cc = $targets['cc'];
         abort_unless($recipients !== [], 422, 'Clientul nu are email.');
+
+        if (! $document->ensureExchangeRate()) {
+            return back()->withErrors([
+                'email' => $document->foreignExchangeRateBlockMessage(),
+            ]);
+        }
 
         $sentAt = now();
         $document->loadMissing('company');
 
         try {
             $mail->send(
-                new DocumentSentMail($document, $invoicePdf->output($document)),
+                new DocumentSentMail($document, $invoicePdf->output($document->fresh(['items', 'client', 'company']))),
                 $recipients,
-                $document->company
+                $document->company,
+                $cc !== [] ? $cc : null
             );
         } catch (Throwable $e) {
             return back()->withErrors([
@@ -900,6 +932,9 @@ class DocumentController extends Controller
         }
 
         $list = implode(', ', $recipients);
+        if ($cc !== []) {
+            $list .= ' (Cc: '.implode(', ', $cc).')';
+        }
         $when = dc_datetime($sentAt);
 
         return back()->with('status', "Email trimis către {$list} la {$when}.");
@@ -907,8 +942,22 @@ class DocumentController extends Controller
 
     private function authorizeDocument(Document $document, CompanyContext $context, string $ability = 'documents_view'): void
     {
-        abort_unless($document->company_id === $context->current()?->id, 403);
-        $this->authorizeCompanyAbility($context->current(), $ability);
+        $current = $context->current();
+        if (! $current || (int) $document->company_id !== (int) $current->id) {
+            $docCompany = \App\Models\Company::query()->find($document->company_id);
+            if (
+                $docCompany
+                && $this->companyPermission()->can(auth()->user(), $docCompany, $ability)
+            ) {
+                // Reload pe /documents/{id}/edit cu altă societate activă în sesiune → comută pe firma documentului.
+                $context->set($docCompany);
+                view()->share('currentCompany', $docCompany);
+                $current = $docCompany;
+            }
+        }
+
+        abort_unless($current && (int) $document->company_id === (int) $current->id, 403);
+        $this->authorizeCompanyAbility($current, $ability);
     }
 
     /**
@@ -990,7 +1039,7 @@ class DocumentController extends Controller
                 || $price === null || $price === ''
                 || $vat === null || $vat === ''
             ) {
-                $errors["items.$index.name"] = "Linia {$line}: produsul e obligatoriu (cantitate ≠ 0, preț, TVA). Descrierea e opțională.";
+                    $errors["items.$index.name"] = "Linia {$line}: produsul e obligatoriu (cantitate ≠ 0, preț, TVA). Descrierea e opțională.";
                 continue;
             }
 
@@ -1044,5 +1093,26 @@ class DocumentController extends Controller
 
         return 'Atenție: la clientul <strong>'.$name.'</strong> nu există cont bancar (IBAN) completat'
             .'. <a href="'.$editUrl.'" class="underline font-semibold">Completează datele clientului</a>.';
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function resolveFormExchangeRate(array $data): float
+    {
+        $currency = strtoupper((string) ($data['currency'] ?? 'RON'));
+        if ($currency === 'RON') {
+            return 1.0;
+        }
+
+        $provided = isset($data['exchange_rate']) ? (float) $data['exchange_rate'] : null;
+        if ($provided !== null && $provided > 1.0001) {
+            return round($provided, 4);
+        }
+
+        return app(ExchangeRateService::class)->resolveForDocument(
+            $currency,
+            $data['issue_date'] ?? now('Europe/Bucharest')->toDateString()
+        );
     }
 }

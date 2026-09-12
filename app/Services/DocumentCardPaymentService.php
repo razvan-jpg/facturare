@@ -6,10 +6,12 @@ use App\Models\Document;
 use App\Models\DocumentCardPayment;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Mollie\Api\MollieApiClient;
 use RuntimeException;
+use Throwable;
 
 class DocumentCardPaymentService
 {
@@ -57,6 +59,8 @@ class DocumentCardPaymentService
                 'key' => $key,
                 'label' => $meta['label'],
                 'short' => $meta['short'],
+                'blurb' => $meta['blurb'] ?? $meta['label'],
+                'logo' => $meta['logo'] ?? null,
                 'url' => URL::signedRoute('documents.pay.start', [
                     'document' => $document->id,
                     'processor' => $key,
@@ -173,44 +177,50 @@ class DocumentCardPaymentService
             $paidAt = now()->toDateString();
             $reference = $externalRef ?: $checkout->checkout_number;
             $payNotes = 'Plată card online ('.$checkout->processor.')';
+            $invoiceError = null;
+            $invoiceId = $document->id;
 
-            // Proformă: încasare → emite automat factura fiscală cu data încasării.
+            // Proformă: încasarea trebuie salvată chiar dacă factura fiscală eșuează
+            // (curs valutar, e-Factura, serie). Altfel IPN-ul pică și ecranul de return rămâne blocat.
             if ($document->type === 'proforma') {
-                $invoice = app(DocumentService::class)->issueInvoiceFromPaidProforma(
-                    $document,
-                    $paidAt,
-                    $amount,
-                    $reference,
-                    $payNotes,
-                    'card',
-                );
+                try {
+                    $document->ensureExchangeRate();
+                    $invoice = app(DocumentService::class)->issueInvoiceFromPaidProforma(
+                        $document,
+                        $paidAt,
+                        $amount,
+                        $reference,
+                        $payNotes,
+                        'card',
+                    );
+                    $invoiceId = $invoice->id;
+                    // Nu apela refreshPaymentStatus pe proformă: plata e pe factură;
+                    // refresh după plăți pe factură ar reseta greșit proforma la „neîncasată”.
+                    $document->refresh()->refreshPaymentStatus();
+                } catch (Throwable $e) {
+                    $invoiceError = $e->getMessage();
+                    Log::error('document.card.invoice_after_pay_failed', [
+                        'checkout' => $checkout->checkout_number,
+                        'document_id' => $document->id,
+                        'error' => $invoiceError,
+                    ]);
+                    $this->recordCardPayment($document, $amount, $paidAt, $reference, $payNotes);
+                    $document->refreshPaymentStatus();
+                }
 
                 $checkout->forceFill([
                     'status' => 'paid',
                     'amount' => $amount,
                     'external_ref' => $externalRef,
                     'paid_at' => now(),
-                    'error' => null,
-                    'document_id' => $invoice->id,
+                    'error' => $invoiceError,
+                    'document_id' => $invoiceId,
                 ])->save();
-
-                $document->refreshPaymentStatus();
 
                 return $checkout->fresh();
             }
 
-            Payment::create([
-                'company_id' => $document->company_id,
-                'document_id' => $document->id,
-                'client_id' => $document->client_id,
-                'method' => 'card',
-                'paid_at' => $paidAt,
-                'amount' => $amount,
-                'currency' => $document->currency,
-                'reference' => $reference,
-                'notes' => $payNotes,
-            ]);
-
+            $this->recordCardPayment($document, $amount, $paidAt, $reference, $payNotes);
             $document->refreshPaymentStatus();
 
             $checkout->forceFill([
@@ -235,6 +245,26 @@ class DocumentCardPaymentService
             'status' => 'failed',
             'error' => $message,
         ])->save();
+    }
+
+    private function recordCardPayment(
+        Document $document,
+        float $amount,
+        string $paidAt,
+        string $reference,
+        string $payNotes,
+    ): void {
+        Payment::create([
+            'company_id' => $document->company_id,
+            'document_id' => $document->id,
+            'client_id' => $document->client_id,
+            'method' => 'card',
+            'paid_at' => $paidAt,
+            'amount' => $amount,
+            'currency' => $document->currency,
+            'reference' => $reference,
+            'notes' => $payNotes,
+        ]);
     }
 
     private function makeCheckoutNumber(Document $document): string

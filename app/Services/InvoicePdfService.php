@@ -30,15 +30,47 @@ class InvoicePdfService
             $cardPaymentHubUrl = $cardPay->hubUrl($document);
         }
 
-        return Pdf::loadView($document->company->invoicePdfView(), [
+        $clientBalanceAsOf = null;
+        $clientBalanceAsOfDate = null;
+        if (
+            $document->client
+            && $document->client->showsOutstandingBalanceOnInvoice()
+            && $document->status === 'issued'
+            && in_array($document->type, ['invoice', 'proforma'], true)
+            && $document->issue_date
+        ) {
+            // Soldul pe PDF = anterior facturii curente (la data emiterii − 1 zi).
+            // Excludem documentul curent și proforma sursă (aceeași obligație).
+            $clientBalanceAsOfDate = $document->issue_date->copy()->subDay()->toDateString();
+            $exceptIds = array_values(array_filter([
+                (int) $document->id,
+                $document->related_document_id ? (int) $document->related_document_id : null,
+            ]));
+            $clientBalanceAsOf = app(ClientBalanceService::class)->balanceAsOfForClient(
+                $document->client,
+                $clientBalanceAsOfDate,
+                $exceptIds
+            );
+        }
+
+        $isReceiptPdf = $document->type === 'receipt';
+        $view = $isReceiptPdf
+            ? 'documents.pdf.receipt'
+            : $document->company->invoicePdfView();
+
+        return Pdf::loadView($view, [
             'document' => $document,
             'locale' => $locale,
             'labels' => $labels,
             'cardPaymentLinks' => $cardPaymentLinks,
             'cardPaymentHubUrl' => $cardPaymentHubUrl,
             'logo' => $document->company->logoDataUri(),
+            'clientBalanceAsOf' => $clientBalanceAsOf,
+            'clientBalanceAsOfDate' => $clientBalanceAsOfDate,
+            'isReceiptPdf' => $isReceiptPdf,
         ])
-            ->setPaper('a4', 'portrait')
+            // Chitanțele: A5 peisaj (mai compacte la tipărire); restul rămân A4 portret.
+            ->setPaper($isReceiptPdf ? 'a5' : 'a4', $isReceiptPdf ? 'landscape' : 'portrait')
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isRemoteEnabled', true)
             ->setOption('defaultFont', 'DejaVu Sans');

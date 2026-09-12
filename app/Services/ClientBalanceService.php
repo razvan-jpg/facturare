@@ -10,6 +10,8 @@ use Illuminate\Support\Collection;
 
 class ClientBalanceService
 {
+    public function __construct(private readonly RonEquivalentService $ron) {}
+
     /**
      * Facturi emise neachitate/parțiale cu rest > 0.
      *
@@ -35,20 +37,27 @@ class ClientBalanceService
     }
 
     /**
-     * Încasări nealocate pe facturi (document_id null) — se aplică întâi pe soldul inițial.
+     * Încasări nealocate pe facturi (document_id null) — în echivalent RON.
      */
     public function unallocatedPaymentsTotal(Client $client): float
     {
-        return round((float) Payment::query()
+        $payments = Payment::query()
             ->where('company_id', $client->company_id)
             ->where('client_id', $client->id)
             ->whereNull('document_id')
-            ->sum('amount'), 2);
+            ->get(['id', 'amount', 'currency', 'paid_at', 'document_id']);
+
+        $total = 0.0;
+        foreach ($payments as $payment) {
+            $ron = $this->ron->fromPayment($payment);
+            if ($ron !== null) {
+                $total += $ron;
+            }
+        }
+
+        return round($total, 2);
     }
 
-    /**
-     * Rest din soldul inițial încă de încasat (după încasările libere / pe sold).
-     */
     public function remainingOpeningBalance(Client $client): float
     {
         return round(max(0, $this->openingBalance($client) - $this->unallocatedPaymentsTotal($client)), 2);
@@ -57,13 +66,17 @@ class ClientBalanceService
     public function openInvoicesRemaining(Client $client, ?Collection $openInvoices = null): float
     {
         $invoices = $openInvoices ?? $this->openInvoices($client);
+        $total = 0.0;
+        foreach ($invoices as $doc) {
+            $ron = $this->ron->fromDocument($doc, $doc->remainingAmount());
+            if ($ron !== null) {
+                $total += $ron;
+            }
+        }
 
-        return round($invoices->sum(fn (Document $d) => $d->remainingAmount()), 2);
+        return round($total, 2);
     }
 
-    /**
-     * Sold real = sold inițial + rest facturi − încasări nealocate pe facturi.
-     */
     public function currentBalance(Client $client, ?Collection $openInvoices = null): float
     {
         return round(
@@ -76,7 +89,7 @@ class ClientBalanceService
 
     /**
      * @param  Collection<int, Client>  $clients
-     * @return array<int, float> client_id => rest facturi
+     * @return array<int, float> client_id => rest facturi în RON
      */
     public function openRemainingByClientIds(Company $company, Collection $clients): array
     {
@@ -91,14 +104,16 @@ class ClientBalanceService
             ->whereIn('type', ['invoice', 'proforma'])
             ->where('status', 'issued')
             ->whereIn('payment_status', ['unpaid', 'partial'])
-            ->get(['id', 'client_id', 'total', 'paid_amount']);
+            ->get(['id', 'client_id', 'total', 'paid_amount', 'currency', 'exchange_rate', 'issue_date']);
 
         $out = array_fill_keys($ids, 0.0);
         foreach ($docs as $doc) {
             $rest = $doc->remainingAmount();
             if ($rest > 0.009) {
-                $cid = (int) $doc->client_id;
-                $out[$cid] = round(($out[$cid] ?? 0) + $rest, 2);
+                $ron = $this->ron->fromDocument($doc, $rest);
+                if ($ron !== null) {
+                    $out[(int) $doc->client_id] = round($out[(int) $doc->client_id] + $ron, 2);
+                }
             }
         }
 
@@ -107,7 +122,7 @@ class ClientBalanceService
 
     /**
      * @param  Collection<int, Client>  $clients
-     * @return array<int, float> client_id => sumă plăți fără factură
+     * @return array<int, float> client_id => încasări nealocate în RON
      */
     public function unallocatedByClientIds(Company $company, Collection $clients): array
     {
@@ -116,23 +131,24 @@ class ClientBalanceService
             return [];
         }
 
-        $rows = Payment::query()
+        $payments = Payment::query()
             ->where('company_id', $company->id)
             ->whereIn('client_id', $ids)
             ->whereNull('document_id')
-            ->selectRaw('client_id, SUM(amount) as paid')
-            ->groupBy('client_id')
-            ->get();
+            ->get(['id', 'client_id', 'amount', 'currency', 'paid_at', 'document_id']);
 
         $out = array_fill_keys($ids, 0.0);
-        foreach ($rows as $row) {
-            $out[(int) $row->client_id] = round((float) $row->paid, 2);
+        foreach ($payments as $payment) {
+            $ron = $this->ron->fromPayment($payment);
+            if ($ron !== null) {
+                $cid = (int) $payment->client_id;
+                $out[$cid] = round($out[$cid] + $ron, 2);
+            }
         }
 
         return $out;
     }
 
-    /** Suma resturilor de sold inițial (> 0) pentru Neîncasat global. */
     public function companyOpeningBalancesTotal(Company $company): float
     {
         $clients = $company->clients()->get(['id', 'company_id', 'opening_balance']);
@@ -152,13 +168,22 @@ class ClientBalanceService
     }
 
     /**
-     * Solduri clienți la o dată (sold inițial aplicabil + rest facturi emise până la dată,
-     * ținând cont de plățile cu paid_at ≤ dată, inclusiv încasările pe sold inițial).
+     * Solduri clienți la o dată — toate sumele în echivalent RON (curs document / BNR).
      *
-     * @return Collection<int, array{client: Client, opening: float, invoices: float, balance: float}>
+     * @param  list<int>  $exceptDocumentIds  Documente excluse (ex. factura curentă + proforma sursă pe PDF)
+     * @return Collection<int, array{
+     *   client: Client,
+     *   opening: float,
+     *   invoices: float,
+     *   balance: float
+     * }>
      */
-    public function balancesAsOf(Company $company, string $asOfDate, ?int $clientId = null): Collection
-    {
+    public function balancesAsOf(
+        Company $company,
+        string $asOfDate,
+        ?int $clientId = null,
+        array $exceptDocumentIds = [],
+    ): Collection {
         $clientsQuery = $company->clients()->orderBy('name');
         if ($clientId) {
             $clientsQuery->where('id', $clientId);
@@ -169,6 +194,7 @@ class ClientBalanceService
         }
 
         $clientIds = $clients->pluck('id')->all();
+        $exceptDocumentIds = array_values(array_unique(array_filter(array_map('intval', $exceptDocumentIds))));
 
         $invoices = Document::query()
             ->where('company_id', $company->id)
@@ -176,9 +202,30 @@ class ClientBalanceService
             ->whereIn('type', ['invoice', 'proforma'])
             ->where('status', 'issued')
             ->whereDate('issue_date', '<=', $asOfDate)
-            ->get(['id', 'client_id', 'total']);
+            ->when($exceptDocumentIds !== [], fn ($q) => $q->whereNotIn('id', $exceptDocumentIds))
+            ->get(['id', 'client_id', 'type', 'total', 'currency', 'exchange_rate', 'issue_date']);
 
-        $invoiceIds = $invoices->pluck('id')->all();
+        // Proforme deja convertite în factură fiscală (emisă până la data soldului):
+        // obligația e pe factură — nu dublăm soldul.
+        $proformaIds = $invoices->where('type', 'proforma')->pluck('id')->all();
+        $convertedProformaIds = [];
+        if ($proformaIds !== []) {
+            $convertedProformaIds = Document::query()
+                ->where('company_id', $company->id)
+                ->whereIn('related_document_id', $proformaIds)
+                ->where('type', 'invoice')
+                ->whereIn('status', ['issued', 'storno'])
+                ->whereDate('issue_date', '<=', $asOfDate)
+                ->pluck('related_document_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+            $convertedProformaIds = array_fill_keys($convertedProformaIds, true);
+        }
+
+        $invoiceIds = $invoices
+            ->reject(fn (Document $d) => isset($convertedProformaIds[(int) $d->id]))
+            ->pluck('id')
+            ->all();
         $paidByDoc = [];
         if ($invoiceIds !== []) {
             $paidRows = Payment::query()
@@ -193,42 +240,51 @@ class ClientBalanceService
             }
         }
 
-        $invoiceRestByClient = array_fill_keys($clientIds, 0.0);
+        $invoiceRestRonByClient = array_fill_keys($clientIds, 0.0);
         foreach ($invoices as $inv) {
+            if (isset($convertedProformaIds[(int) $inv->id])) {
+                continue;
+            }
             $paid = $paidByDoc[(int) $inv->id] ?? 0.0;
             $rest = max(0, round((float) $inv->total - $paid, 2));
             if ($rest > 0.009) {
-                $cid = (int) $inv->client_id;
-                $invoiceRestByClient[$cid] = round(($invoiceRestByClient[$cid] ?? 0) + $rest, 2);
+                $ron = $this->ron->fromDocument($inv, $rest);
+                if ($ron !== null) {
+                    $cid = (int) $inv->client_id;
+                    $invoiceRestRonByClient[$cid] = round($invoiceRestRonByClient[$cid] + $ron, 2);
+                }
             }
         }
 
-        $orphanByClient = array_fill_keys($clientIds, 0.0);
-        $orphanRows = Payment::query()
+        $orphanRonByClient = array_fill_keys($clientIds, 0.0);
+        $orphanPayments = Payment::query()
             ->where('company_id', $company->id)
             ->whereIn('client_id', $clientIds)
             ->whereNull('document_id')
             ->whereDate('paid_at', '<=', $asOfDate)
-            ->selectRaw('client_id, SUM(amount) as paid')
-            ->groupBy('client_id')
-            ->get();
-        foreach ($orphanRows as $row) {
-            $orphanByClient[(int) $row->client_id] = round((float) $row->paid, 2);
+            ->get(['id', 'client_id', 'amount', 'currency', 'paid_at', 'document_id']);
+        foreach ($orphanPayments as $payment) {
+            $ron = $this->ron->fromPayment($payment);
+            if ($ron !== null) {
+                $cid = (int) $payment->client_id;
+                $orphanRonByClient[$cid] = round($orphanRonByClient[$cid] + $ron, 2);
+            }
         }
 
-        return $clients->map(function (Client $client) use ($asOfDate, $invoiceRestByClient, $orphanByClient) {
+        return $clients->map(function (Client $client) use ($asOfDate, $invoiceRestRonByClient, $orphanRonByClient) {
             $openingRegistered = $this->openingBalanceAsOf($client, $asOfDate);
-            $orphans = round((float) ($orphanByClient[$client->id] ?? 0), 2);
-            $opening = round(max(0, $openingRegistered - $orphans), 2);
-            $orphanExcess = round(max(0, $orphans - $openingRegistered), 2);
-            $invoicesRest = round((float) ($invoiceRestByClient[$client->id] ?? 0), 2);
-            $balance = round($opening + $invoicesRest - $orphanExcess, 2);
+            $orphansRon = (float) ($orphanRonByClient[$client->id] ?? 0);
+            $invoicesRon = (float) ($invoiceRestRonByClient[$client->id] ?? 0);
+
+            $openingRemaining = round(max(0, $openingRegistered - min($openingRegistered, $orphansRon)), 2);
+            $orphanExcess = round(max(0, $orphansRon - $openingRegistered), 2);
+            $balanceRon = round($openingRemaining + max(0, $invoicesRon - $orphanExcess), 2);
 
             return [
                 'client' => $client,
-                'opening' => $opening,
-                'invoices' => $invoicesRest,
-                'balance' => $balance,
+                'opening' => $openingRemaining,
+                'invoices' => $invoicesRon,
+                'balance' => $balanceRon,
             ];
         })->values();
     }
@@ -248,12 +304,21 @@ class ClientBalanceService
         return $amount;
     }
 
-    /** Total de încasat de la toți clienții la data dată (implicit azi). */
+    /**
+     * @param  list<int>  $exceptDocumentIds
+     */
+    public function balanceAsOfForClient(Client $client, string $asOfDate, array $exceptDocumentIds = []): float
+    {
+        $row = $this->balancesAsOf($client->company, $asOfDate, $client->id, $exceptDocumentIds)->first();
+
+        return round((float) ($row['balance'] ?? 0), 2);
+    }
+
     public function companyReceivableAsOf(Company $company, ?string $asOfDate = null): float
     {
         $asOfDate = $asOfDate ?: now()->toDateString();
         $rows = $this->balancesAsOf($company, $asOfDate);
 
-        return round($rows->sum(fn (array $row) => $row['balance']), 2);
+        return round((float) $rows->sum('balance'), 2);
     }
 }

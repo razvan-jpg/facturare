@@ -68,7 +68,7 @@
     <li>Clientul deschide linkul, completează datele cardului pe pagina procesatorului (nu pe DateConta).</li>
     <li>La întoarcerea din plată, DateConta sincronizează statusul (ca la Mollie): dacă procesatorul trimite confirmarea pe return sau IPN-ul ajunge imediat, documentul se marchează încasat fără intervenție manuală.</li>
     <li>După confirmare (IPN / webhook / sync la return), documentul e încasat (sau parțial, după sumă).</li>
-    <li>La <strong>proformă</strong>: după încasare se emite automat factura fiscală cu data plății.</li>
+    <li>La <strong>proformă</strong>: după încasare se emite automat factura fiscală cu data plății; plata rămâne pe factură, iar proforma rămâne marcată <strong>încasată</strong> (Achitată).</li>
     <li>La <strong>facturi recurente</strong>: bifa de pe șablon se moștenește pe facturile generate.</li>
 </ol>
 
