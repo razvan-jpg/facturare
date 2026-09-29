@@ -7,6 +7,23 @@
  */
 return [
     [
+        'version' => '1.0.317',
+        'date' => '2026-09-29',
+        'title' => 'Copie CC la notificarea manuală',
+        'changes' => [
+            'La trimiterea manuală a notificării de sold restant, o copie pleacă în CC pe emailul contului cu care ești logat.',
+        ],
+    ],
+    [
+        'version' => '1.0.316',
+        'date' => '2026-09-29',
+        'title' => 'Notificare manuală de sold restant',
+        'changes' => [
+            'În Setări → Notificări poți trimite manual emailul de sold restant către un client ales.',
+            'La trimiterea manuală poți atașa fișa de cont (PDF, cont 4111).',
+        ],
+    ],
+    [
         'version' => '1.0.306',
         'date' => '2026-09-13',
         'title' => 'Proformă plătită cu card: rămâne încasată',

@@ -25,6 +25,7 @@ class OverdueReminderMail extends Mailable
         public string $scope,
         public bool $includeStatement,
         public ?string $statementPdf = null,
+        public string $statementKind = 'client',
     ) {
         $this->company->loadMissing('owner');
         $this->locale(MailLocale::forUser($this->company->owner));
@@ -59,6 +60,7 @@ class OverdueReminderMail extends Mailable
                 'balance' => $this->balance,
                 'scope' => $this->scope,
                 'includeStatement' => $this->includeStatement,
+                'statementKind' => $this->statementKind,
                 'logo' => config('dateconta.logo_url'),
                 'brand' => config('dateconta.brand_name', 'DateConta Facturare'),
             ],
@@ -71,7 +73,8 @@ class OverdueReminderMail extends Mailable
             return [];
         }
 
-        $name = 'fisa-client-'.preg_replace('/[^a-zA-Z0-9_-]+/', '-', $this->client->name).'.pdf';
+        $prefix = $this->statementKind === 'account' ? 'fisa-cont-' : 'fisa-client-';
+        $name = $prefix.preg_replace('/[^a-zA-Z0-9_-]+/', '-', $this->client->name).'.pdf';
 
         return [
             Attachment::fromData(fn () => $this->statementPdf, $name)

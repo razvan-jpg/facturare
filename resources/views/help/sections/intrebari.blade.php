@@ -185,6 +185,13 @@
     Este comportamentul corect. Schimbă <strong>Limbă document</strong> pe factură (și activează limba la Setări → Limbi).
 </p>
 
+<h4>Cum trimit o notificare de sold unui singur client?</h4>
+<p>
+    Setări → <strong>Notificări</strong> → <strong>Trimite unui client</strong>. Alegi clientul (trebuie să aibă email)
+    și, dacă vrei, bifezi <strong>Atașează fișa de cont (PDF)</strong>. O copie ajunge în CC pe emailul tău. Detalii:
+    <a href="{{ route('help.show', 'societate') }}">Societatea</a>.
+</p>
+
 <h4>Nu apar IBAN-urile pe PDF</h4>
 <p>
     Setări → Conturi bancare: bifează „Pe factură” (maximum 3) și salvează. Regenerează PDF-ul.

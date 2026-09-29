@@ -197,6 +197,9 @@ class CompanyController extends Controller
                 ->latest('sent_at')
                 ->limit(8)
                 ->get(),
+            'reminderClients' => $tab === 'notificari'
+                ? $company->clients()->orderBy('name')->get(['id', 'name', 'email', 'cui'])
+                : collect(),
             'seriesList' => $company->series,
             'branches' => $company->branches,
         ]);
@@ -519,6 +522,44 @@ class CompanyController extends Controller
         return back()->with('status', $sent > 0
             ? "Au fost trimise {$sent} notificări de restanțe."
             : 'Nu există clienți eligibili acum (fără restanțe, fără email sau deja notificați în intervalul setat).');
+    }
+
+    public function sendOverdueReminderToClient(Request $request, Company $company, OverdueReminderService $reminders): RedirectResponse
+    {
+        $this->authorizeCompany($company);
+
+        $data = $request->validate([
+            'client_id' => ['required', 'integer', Rule::exists('clients', 'id')->where('company_id', $company->id)],
+        ]);
+
+        $client = $company->clients()->whereKey($data['client_id'])->firstOrFail();
+
+        try {
+            $result = $reminders->sendManual(
+                $company,
+                $client,
+                $request->boolean('attach_account_statement'),
+                $request->user()?->email,
+            );
+        } catch (Throwable $e) {
+            Log::warning('Manual overdue reminder failed', [
+                'company_id' => $company->id,
+                'client_id' => $client->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['client_id' => 'Nu am putut trimite emailul. '.$e->getMessage()]);
+        }
+
+        if (! $result['ok']) {
+            return back()->withInput()->withErrors(['client_id' => $result['message']]);
+        }
+
+        return redirect()
+            ->route('companies.edit', ['company' => $company, 'tab' => 'notificari'])
+            ->with('status', $result['message']);
     }
 
     public function extendAnaf(Company $company, AnafOAuthService $oauth): RedirectResponse

@@ -45,7 +45,11 @@
 
     @if($includeStatement)
         <p style="margin:0 0 14px;font-size:14px;line-height:1.5;">
-            Atașat găsiți <strong>fișa de client</strong> cu situația facturilor deschise.
+            @if(($statementKind ?? 'client') === 'account')
+                Atașat găsiți <strong>fișa de cont</strong> (4111), cu soldul și mișcările clientului.
+            @else
+                Atașat găsiți <strong>fișa de client</strong> cu situația facturilor deschise.
+            @endif
         </p>
     @endif
 

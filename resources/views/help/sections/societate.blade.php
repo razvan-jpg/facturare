@@ -155,6 +155,18 @@
     Parola SMTP se păstrează criptat. La modificare ulterioară, lasă câmpul parolă gol dacă nu vrei să o schimbi.
 </div>
 
+<h3>Notificări de restanțe</h3>
+<p>
+    În Setări → <strong>Notificări</strong> configurezi emailul trimis clienților cu facturi scadente neachitate:
+    frecvența, conținutul (facturi, sold sau ambele), zilele de grație după scadență și atașarea fișei de client la trimiterea automată.
+</p>
+<ol class="help-steps">
+    <li>Bifează <strong>Activează notificările de restanțe</strong> și salvează. Fără bifă, trimiterea automată (zilnic și „Trimite acum”) nu pleacă.</li>
+    <li>La <strong>Trimite unui client</strong> cauți clientul (după nume, CUI sau email) și trimiți manual notificarea de sold restant. Clientul trebuie să aibă email pe fișă. O copie pleacă în CC pe emailul contului cu care ești logat.</li>
+    <li>Bifează <strong>Atașează fișa de cont (PDF)</strong> dacă vrei ca emailul să includă fișa de cont 4111 (de la soldul inițial până azi). Fără bifă, pleacă doar mesajul cu soldul.</li>
+    <li>Trimiterea manuală nu ține cont de frecvență și nici de zilele de grație. Dacă clientul nu are facturi scadente neachitate și nici sold inițial, emailul nu se trimite.</li>
+</ol>
+
 <h3>Personalizare vizuală (rezumat)</h3>
 <p>
     Logo, semnătură, ștampilă, culoare și machetă se configurează la <strong>Personalizare PDF</strong>.

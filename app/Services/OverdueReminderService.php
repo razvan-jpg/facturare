@@ -110,34 +110,158 @@ class OverdueReminderService
             ])->output();
         }
 
+        $this->deliver(
+            company: $company,
+            client: $client,
+            overdue: $overdue,
+            balance: $balance,
+            scope: $scope,
+            includeStatement: $includeStatement,
+            statementPdf: $statementPdf,
+            statementKind: 'client',
+            recipients: $recipients,
+            viaCompanyMail: false,
+        );
+
+        return true;
+    }
+
+    /**
+     * Trimitere manuală către un client, indiferent de frecvență și de zilele de grație.
+     * Fișa de cont (4111) se atașează doar dacă e cerută.
+     *
+     * @return array{ok: bool, message: string}
+     */
+    public function sendManual(Company $company, Client $client, bool $attachAccountStatement, ?string $ccEmail = null): array
+    {
+        if ((int) $client->company_id !== (int) $company->id) {
+            return ['ok' => false, 'message' => 'Clientul nu aparține acestei societăți.'];
+        }
+
+        $recipients = $client->emailAddresses();
+        if ($recipients === []) {
+            return ['ok' => false, 'message' => 'Clientul nu are adresă de email. Completeaz-o pe fișa clientului, apoi încearcă din nou.'];
+        }
+
+        $overdue = $this->overdueInvoicesForClient($company, $client, 0);
+        $opening = app(ClientBalanceService::class)->remainingOpeningBalance($client);
+        $balance = round($overdue->sum(fn (Document $d) => $d->remainingAmount()) + $opening, 2);
+
+        if ($overdue->isEmpty() && $balance < 0.01) {
+            return ['ok' => false, 'message' => 'Clientul nu are sold restant acum (fără facturi scadente neachitate și fără sold inițial).'];
+        }
+
+        $scope = $company->overdue_reminder_scope ?: 'both';
+        if ($overdue->isEmpty()) {
+            $scope = 'balance';
+        }
+
+        $statementPdf = null;
+        if ($attachAccountStatement) {
+            $statementPdf = $this->accountStatementPdf($company, $client);
+        }
+
+        $cc = $this->ccAddress($ccEmail, $recipients);
+
+        $this->deliver(
+            company: $company,
+            client: $client,
+            overdue: $overdue,
+            balance: $balance,
+            scope: $scope,
+            includeStatement: $attachAccountStatement,
+            statementPdf: $statementPdf,
+            statementKind: 'account',
+            recipients: $recipients,
+            viaCompanyMail: true,
+            cc: $cc,
+        );
+
+        $who = $client->name.' ('.implode(', ', $recipients).')';
+        $message = $attachAccountStatement
+            ? "Notificarea de sold restant a fost trimisă către {$who}, cu fișa de cont atașată."
+            : "Notificarea de sold restant a fost trimisă către {$who}.";
+        if ($cc !== []) {
+            $message .= ' O copie a plecat în CC către '.$cc[0].'.';
+        }
+
+        return ['ok' => true, 'message' => $message];
+    }
+
+    /**
+     * @param  list<string>  $recipients
+     * @param  list<string>  $cc
+     */
+    private function deliver(
+        Company $company,
+        Client $client,
+        Collection $overdue,
+        float $balance,
+        string $scope,
+        bool $includeStatement,
+        ?string $statementPdf,
+        string $statementKind,
+        array $recipients,
+        bool $viaCompanyMail,
+        array $cc = [],
+    ): void {
         $this->mail->send(new OverdueReminderMail(
             company: $company,
             client: $client,
             overdueInvoices: $overdue,
             balance: $balance,
             scope: $scope,
-            includeStatement: $includeStatement,
+            includeStatement: $includeStatement && $statementPdf !== null,
             statementPdf: $statementPdf,
-        ), $recipients);
+            statementKind: $statementKind,
+        ), $recipients, $viaCompanyMail ? $company : null, $cc !== [] ? $cc : null);
 
         OverdueReminderLog::create([
             'company_id' => $company->id,
             'client_id' => $client->id,
             'email' => implode(', ', $recipients),
             'scope' => $scope,
-            'included_statement' => $includeStatement,
+            'included_statement' => $includeStatement && $statementPdf !== null,
             'document_ids' => $overdue->pluck('id')->values()->all(),
             'balance_total' => $balance,
             'invoice_count' => $overdue->count(),
             'sent_at' => now(),
         ]);
-
-        return true;
     }
 
-    public function overdueInvoicesForClient(Company $company, Client $client): Collection
+    /**
+     * @param  list<string>  $recipients
+     * @return list<string>
+     */
+    private function ccAddress(?string $email, array $recipients): array
     {
-        $grace = max(0, (int) ($company->overdue_reminder_grace_days ?? 0));
+        $email = strtolower(trim((string) $email));
+        if ($email === '' || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return [];
+        }
+
+        $already = array_map(fn (string $address) => strtolower(trim($address)), $recipients);
+        if (in_array($email, $already, true)) {
+            return [];
+        }
+
+        return [$email];
+    }
+
+    private function accountStatementPdf(Company $company, Client $client): string
+    {
+        $from = $client->effectiveOpeningBalanceDate();
+        $to = now()->toDateString();
+        $data = app(PartnerLedgerService::class)->build($company, $client, $from, $to);
+
+        return Pdf::loadView('reports.partner-ledger-pdf', $data)
+            ->setPaper('a4', 'portrait')
+            ->output();
+    }
+
+    public function overdueInvoicesForClient(Company $company, Client $client, ?int $graceDays = null): Collection
+    {
+        $grace = max(0, $graceDays ?? (int) ($company->overdue_reminder_grace_days ?? 0));
         $cutoff = now()->subDays($grace)->toDateString();
 
         return $company->documents()

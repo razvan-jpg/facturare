@@ -196,6 +196,9 @@ Route::middleware(['auth', 'auth.session', 'subscription', 'company'])->group(fu
         ->middleware('throttle:10,1')
         ->name('companies.referral-recommend');
     Route::post('/companies/{company}/reminders/overdue', [CompanyController::class, 'runOverdueReminders'])->name('companies.reminders.overdue');
+    Route::post('/companies/{company}/reminders/overdue/client', [CompanyController::class, 'sendOverdueReminderToClient'])
+        ->middleware('throttle:20,1')
+        ->name('companies.reminders.overdue.client');
     Route::post('/companies/{company}/branches', [CompanyController::class, 'storeBranch'])->name('companies.branches.store');
     Route::delete('/companies/{company}/branches/{branch}', [CompanyController::class, 'destroyBranch'])->name('companies.branches.destroy');
     Route::post('/companies/{company}/series', [CompanyController::class, 'storeSeries'])->name('companies.series.store');

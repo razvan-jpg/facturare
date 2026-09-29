@@ -37,6 +37,42 @@
     <button class="dc-btn-primary">{{ __('Salvează') }}</button>
 </form>
 
+<div class="dc-card p-6 space-y-4">
+    <div>
+        <h3 class="font-semibold">Trimite unui client</h3>
+        <p class="text-sm text-slate-600">Email cu soldul restant, către clientul ales. Poți atașa și fișa de cont (4111). Primești o copie în CC pe emailul contului tău. Nu ține cont de frecvență sau de zilele de grație.</p>
+    </div>
+    @php
+        $mailClients = ($reminderClients ?? collect())->filter(fn ($c) => $c->emailAddresses() !== [])->values();
+    @endphp
+    @if($mailClients->isEmpty())
+        <p class="text-sm text-slate-500">Niciun client cu adresă de email. Adaugă emailul pe fișa clientului ca să poți trimite notificarea.</p>
+    @else
+        <form method="POST" action="{{ route('companies.reminders.overdue.client', $company) }}" class="space-y-4"
+              onsubmit="return confirm('Trimiți notificarea de sold restant către clientul selectat?');">
+            @csrf
+            <div>
+                <label class="dc-label" for="reminder-client-filter">Client</label>
+                <input type="search" id="reminder-client-filter" class="dc-input mb-2" placeholder="Caută după nume, CUI sau email" autocomplete="off">
+                <select name="client_id" id="reminder-client" class="dc-input" required>
+                    <option value="">Alege clientul</option>
+                    @foreach($mailClients as $c)
+                        <option value="{{ $c->id }}" @selected((string) old('client_id') === (string) $c->id)>{{ $c->name }}@if($c->cui) · {{ $c->cui }}@endif · {{ $c->email }}</option>
+                    @endforeach
+                </select>
+                @error('client_id')
+                    <p class="text-sm text-red-700 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <label class="flex items-center gap-2">
+                <input type="checkbox" name="attach_account_statement" value="1" @checked(old('attach_account_statement')) class="rounded border-slate-300">
+                <span class="text-sm">Atașează fișa de cont (PDF)</span>
+            </label>
+            <button class="dc-btn-primary">Trimite notificare</button>
+        </form>
+    @endif
+</div>
+
 @if($company->overdue_reminders_enabled)
 <div class="dc-card p-6">
     <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
@@ -49,17 +85,46 @@
             <button class="dc-btn-secondary">Trimite acum</button>
         </form>
     </div>
-    @if(($recentReminders ?? collect())->isNotEmpty())
-        <ul class="space-y-2 text-sm text-slate-600 border-t border-slate-100 pt-3">
-            @foreach($recentReminders as $log)
-                <li>
-                    {{ dc_datetime($log->sent_at) }} · {{ $log->client?->name ?: 'Client' }}
-                    · {{ $log->invoice_count }} fact.
-                    · {{ number_format($log->balance_total, 2, ',', '.') }} RON
-                </li>
-            @endforeach
-        </ul>
-    @endif
+</div>
+@endif
+
+@if(($recentReminders ?? collect())->isNotEmpty())
+<div class="dc-card p-6">
+    <h3 class="font-semibold mb-3">Trimiteri recente</h3>
+    <ul class="space-y-2 text-sm text-slate-600">
+        @foreach($recentReminders as $log)
+            <li>
+                {{ dc_datetime($log->sent_at) }} · {{ $log->client?->name ?: 'Client' }}
+                · {{ $log->invoice_count }} fact.
+                · {{ number_format($log->balance_total, 2, ',', '.') }} RON
+                @if($log->included_statement)
+                    · cu fișă
+                @endif
+            </li>
+        @endforeach
+    </ul>
 </div>
 @endif
 </div>
+
+<script>
+(() => {
+    const filter = document.getElementById('reminder-client-filter');
+    const select = document.getElementById('reminder-client');
+    if (!filter || !select) return;
+    const all = [...select.options].map((option) => ({
+        value: option.value,
+        text: option.textContent,
+    }));
+    filter.addEventListener('input', () => {
+        const q = filter.value.trim().toLowerCase();
+        const current = select.value;
+        select.replaceChildren();
+        for (const item of all) {
+            if (item.value && q !== '' && !item.text.toLowerCase().includes(q)) continue;
+            select.append(new Option(item.text, item.value, false, item.value === current));
+        }
+        if (select.value !== current) select.value = '';
+    });
+})();
+</script>
